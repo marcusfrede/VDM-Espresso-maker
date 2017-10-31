@@ -1,0 +1,23 @@
+class Sensor
+
+instance variables
+
+protected ID	: nat;
+protected Value	: nat;
+protected Env	: Environment;
+
+operations
+
+public GetID: () ==> nat
+	GetID() ==
+		return ID;
+
+public ReadValue: () ==> nat
+	ReadValue() ==
+		return Value;
+
+public Step: () ==> ()
+	Step() ==
+		is subclass responsibility
+
+end Sensor
