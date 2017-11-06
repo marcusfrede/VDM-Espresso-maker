@@ -5,7 +5,7 @@ instance variables
 flowController     : FlowController;
 levelController		 : LevelController;
 pressureController : PressureController;
-temperatureSensor  : TemperatureSensor;
+waterTank					 : WaterTank;
 motionSensor			 : seq of MotionSensor := [];
 grinder						 : Grinder;
 

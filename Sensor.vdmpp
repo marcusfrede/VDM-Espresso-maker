@@ -1,8 +1,12 @@
 class Sensor
 
+types
+public sensorType 	= <TEMPSENSOR> | <PRESSURESENSOR> | <NONE>;
+
 instance variables
 
 protected ID	: nat;
+protected Type : sensorType;
 protected Value	: nat;
 protected Env	: Environment;
 
@@ -11,8 +15,12 @@ operations
 public GetID: () ==> nat
 	GetID() ==
 		return ID;
+		
+public GetType: () ==> sensorType
+	GetType() ==
+		return Type;
 
-public ReadValue: () ==> nat
+pure public ReadValue: () ==> nat
 	ReadValue() ==
 		return Value;
 

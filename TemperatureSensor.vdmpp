@@ -2,9 +2,10 @@ class TemperatureSensor is subclass of Sensor
 
 operations
 
-public TemperatureSensor: nat * nat ==> TemperatureSensor
-	TemperatureSensor (id, val) ==
+public TemperatureSensor: nat * sensorType * nat ==> TemperatureSensor
+	TemperatureSensor (id, type, val) ==
 		(ID := id;
+		Type := type;
 		Value := val;
 		);
 
