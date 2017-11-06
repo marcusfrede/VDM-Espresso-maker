@@ -4,3 +4,5 @@
 *.covtbl
 *.covtbl
 *.covtbl
+*.vdmppcov
+*.properties
