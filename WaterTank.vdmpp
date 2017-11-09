@@ -2,8 +2,8 @@ class WaterTank
 
 instance variables
 waterLevel : nat := 0;
-waterTemp : nat := 60;
-temperatureSensor : TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>, waterTemp);
+temperatureSensor : TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>, 0);
+heatingElement 		: HeatingElement := new HeatingElement(1);
 inv TempInv(temperatureSensor);
 
 functions
@@ -11,7 +11,7 @@ functions
 -- temp must be higher than 56 and below 80
 TempInv: TemperatureSensor -> bool
 TempInv(ts) == 
-	ts.ReadValue() > 56 and ts.ReadValue() < 80
+	ts.ReadValue() > 56 and ts.ReadValue() < 80;
 
 
 operations
@@ -24,12 +24,11 @@ FillTank() == (
 
 public HeatWater: () ==> ()
 HeatWater() ==         
-	waterTemp := waterTemp + 1;
+	heatingElement.Step();
 
-public CoolWater: () ==> ()
-CoolWater() ==         
-	waterTemp := waterTemp - 1;
-
+--public CoolWater: () ==> ()
+--CoolWater() ==         
+--	waterTemp := waterTemp - 1;
 
 public BrewTest: () ==> nat
 BrewTest() == (        
@@ -38,15 +37,6 @@ BrewTest() == (
 );
 
 
-
-/*
-public WaterTank () ==> WaterTank
-WaterTank() == (
-
-t
-
-)
-*/
 
 
 

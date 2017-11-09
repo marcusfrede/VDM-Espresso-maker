@@ -1,0 +1,22 @@
+class HeatingElement
+
+instance variables
+
+protected ID	: nat;
+protected Env	: Environment;
+
+operations
+
+public HeatingElement: nat ==> HeatingElement
+	HeatingElement (id) ==
+		ID := id;
+
+public GetID: () ==> nat
+	GetID() ==
+		return ID;
+
+public Step: () ==> ()
+	Step() ==
+		World`env.IncTemp();
+		
+end HeatingElement
