@@ -1,0 +1,17 @@
+class LevelSensor is subclass of Sensor
+
+operations
+
+public LevelSensor: nat * sensorType * nat ==> LevelSensor
+	LevelSensor (id, type, val) ==
+		(ID := id;
+		Type := type;
+		Value := val;
+		);
+
+public Step: () ==> ()
+	Step() ==
+		(Value := World`env.GetWaterLevel();
+		);
+
+end LevelSensor

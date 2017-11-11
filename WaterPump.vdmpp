@@ -1,0 +1,32 @@
+class WaterPump
+
+operations 
+/*
+public WaterIn: () ==> ()
+	WaterIn() ==
+		World`env.IncWaterLevel();
+	
+public WaterOut: () ==> ()
+	WaterOut() ==
+		World`env.DecWaterLevel();
+*/
+
+public FillTank: () ==> ()
+	FillTank() == (
+		let s : nat = World`env.IncWaterLevel() in
+			if s = 100 
+	  		then return
+	  			else 
+	         	EmptyTank();	
+);
+		
+public EmptyTank: () ==> ()
+	EmptyTank() == (
+		let s : nat = World`env.DecWaterLevel() in
+			if s = 0 
+	  		then return
+	  			else 
+	         	EmptyTank();
+);
+	
+end WaterPump

@@ -1,7 +1,7 @@
 class Sensor
 
 types
-public sensorType 	= <TEMPSENSOR> | <PRESSURESENSOR> | <NONE>;
+public sensorType 	= <TEMPSENSOR> | <PRESSURESENSOR> | <LEVELSENSOR> | <NONE>;
 
 instance variables
 

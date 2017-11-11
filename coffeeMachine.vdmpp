@@ -1,0 +1,24 @@
+class CoffeeMachine
+
+instance variables
+
+flowController      : FlowController;
+pressureController  : PressureController;
+waterTankController : WaterTankController;
+motionSensor			  : seq of MotionSensor := [];
+grinder						  : Grinder;
+
+types
+
+public DrinkType = <BlackCoffee>|<Espresso>|<Latte> 
+
+operations
+
+public Brew : DrinkType ==> ()
+Brew(d) ==
+ is not yet specified;
+
+
+
+
+end CoffeeMachine

@@ -1,0 +1,22 @@
+class CoolingElement
+
+instance variables
+
+protected ID	: nat;
+protected Env	: Environment;
+
+operations
+
+public CoolingElement: nat ==> CoolingElement
+	CoolingElement (id) ==
+		ID := id;
+
+public GetID: () ==> nat
+	GetID() ==
+		return ID;
+
+public Step: () ==> ()
+	Step() ==
+		World`env.DecTemp();
+		
+end CoolingElement

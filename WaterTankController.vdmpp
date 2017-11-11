@@ -1,0 +1,49 @@
+class WaterTankController
+
+instance variables
+tankTempSensor 		: TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>, 0);
+tankLevelSensor 	: LevelSensor := new LevelSensor(1, <LEVELSENSOR>, 0);
+heatingElement 		: HeatingElement := new HeatingElement(1);
+coolingElement 		: CoolingElement := new CoolingElement(1);
+waterPump					: WaterPump := new WaterPump();
+inv TempInv(tankTempSensor);
+
+functions
+
+-- temp must be higher than 4 and below 9 to prevent growth of bacteria 
+TempInv: TemperatureSensor -> bool
+TempInv(ts) == 
+	ts.ReadValue() > 4 and ts.ReadValue() < 9;
+
+operations
+
+public FillTank: () ==> ()
+FillTank() == (           
+	waterPump.FillTank();
+);
+
+public EmptyTank: () ==> ()
+EmptyTank() == (           
+	waterPump.EmptyTank();
+);
+
+public HeatWater: () ==> ()
+HeatWater() ==         
+	heatingElement.Step();
+
+public CoolWater: () ==> ()
+CoolWater() ==         
+	coolingElement.Step();
+
+public GetWaterLevel: () ==> nat
+GetWaterLevel() ==
+	tankLevelSensor.ReadValue();
+
+public BrewTest: () ==> nat
+BrewTest() == (        
+	CoolWater();
+	return tankTempSensor.ReadValue()
+);
+
+
+end WaterTankController

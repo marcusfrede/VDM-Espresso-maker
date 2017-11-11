@@ -2,9 +2,10 @@ class Environment
 
 instance variables
 
-private envTemp		: nat;
-private waterTemp : nat := 60;
-
+private envTemp		 : nat;
+private waterTemp  : nat := 5;
+private waterLevel : nat := 0;
+inv LevelInv(waterLevel);
 
 
 /*
@@ -25,6 +26,11 @@ types
 --
 -- Operations definition section
 --
+
+functions
+LevelInv: nat -> bool
+LevelInv(lvl) == 
+	lvl >= 0;
 
 operations
 
@@ -91,15 +97,32 @@ public ReadTemp: () ==> nat
 
 public IncTemp: () ==> ()
 	IncTemp() ==
-		waterTemp := envTemp + 1;
+		waterTemp := waterTemp + 1;
 
 public DecTemp: () ==> ()
 	DecTemp() ==
-		waterTemp := envTemp - 1;
+		waterTemp := waterTemp - 1;
 
 public SetTemp: nat ==> ()
 	SetTemp(t) ==
 		waterTemp := t;
+
+public GetWaterLevel: () ==> nat
+	GetWaterLevel() ==
+		return waterLevel;
+
+public IncWaterLevel: () ==> nat
+	IncWaterLevel() == (
+		waterLevel := waterLevel + 1;
+		return waterLevel;
+		);
+
+public DecWaterLevel: () ==> nat
+	DecWaterLevel() == (
+		waterLevel := waterLevel - 1;
+		return waterLevel;
+		);
+--	pre LevelInv(waterLevel);
 
 --public isFinished : () ==> bool
 --isFinished () == 
