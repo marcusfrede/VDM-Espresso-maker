@@ -3,7 +3,7 @@ class World
 instance variables
 
 static public env : Environment := new Environment("senario.txt");
-static public timerRef : Timer := new Timer();
+static public timerRef : Time := new Time();
   
 operations
 

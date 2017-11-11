@@ -1,3 +1,38 @@
 class Grinder
 
+types
+public Bean :: weight : nat;
+				
+
+instance variables
+math : MATH := new MATH();
+io : IO := new IO();
+beans : set of Bean;
+
+operations
+
+public Grinder: () ==> Grinder
+Grinder() == (
+ let bean1 = mk_Bean(1) in
+ let bean2 = mk_Bean(2) in
+ let bean3 = mk_Bean(3) in
+ --let bean3 = mk_Bean(math.rand(3)) in
+ beans := {bean1, bean2, bean3};
+);
+	--bean := new bean
+
+
+
+public Grind: nat1 ==> ()
+Grind(w) == (
+	dcl tot : nat := 0; 
+	for all s in set beans do
+	if tot <= w
+	then tot := tot + s.weight
+	else return
+		
+-- what if out off beans? error message!!!
+);
+
+
 end Grinder

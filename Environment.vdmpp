@@ -2,17 +2,20 @@ class Environment
 
 instance variables
 
-private envTemp		 : nat;
-private waterTemp  : nat := 5;
-private waterLevel : nat := 0;
+--private envTemp		  : nat;
+private waterTemp   : nat := 5;
+private waterLevel  : nat := 0;
+private coffeeBeans : nat := 0;
+
 inv LevelInv(waterLevel);
 
 
-/*
+
 private io       : IO := new IO();
 private inlines	 : seq of inline := [];
 private simtime	 : nat;
-*/
+private finished : bool := false;
+
 --private finished : bool := false;
 
 --
@@ -21,7 +24,7 @@ private simtime	 : nat;
 types
 
 -- Input file: Temp, Time
---public inline	= nat * nat;
+public inline	= nat * nat;
 
 --
 -- Operations definition section
@@ -34,19 +37,8 @@ LevelInv(lvl) ==
 
 operations
 
-public Environment: seq of char ==> Environment
-  Environment(fname) ==
-   (def mk_ (-,mk_(t,input)) = io.freadval[nat * seq of inline](fname) 
-    in
-     (inlines := input;
-      simtime := t;
-     );
-  
-    envTemp := 20;
-    envHumid := 85;
-   );
+--- Env operations ---
 
-/*
 public Environment: seq of char ==> Environment
   Environment(fname) ==
    (def mk_ (-,mk_(t,input)) = io.freadval[nat * seq of inline](fname) 
@@ -55,7 +47,7 @@ public Environment: seq of char ==> Environment
       simtime := t;
      );
   
-    envTemp := 20;
+  --  envTemp := 20;
    );
    
 public Run: () ==> ()
@@ -89,7 +81,12 @@ CreateSignal() ==
         return
        );
  );	
-*/
+
+public isFinished : () ==> bool
+isFinished () == 
+  return inlines = [] and finished;
+
+--- Coffee ---
 
 public ReadTemp: () ==> nat
 	ReadTemp() ==
