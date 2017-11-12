@@ -10,7 +10,7 @@ grinder						  : Grinder;
 
 types
 
-public DrinkType = <BlackCoffee> | <Espresso> | <Latte> 
+public DrinkType = <Americano> | <Espresso> | <Latte> 
 
 operations
 
@@ -25,16 +25,16 @@ Brew(dt) == (
 
  dcl x : nat := 
  cases dt:
-		<BlackCoffee> -> BrewBlackCoffee()
-	--	<Espresso> -> BrewEspresso(),
-	--	<Latte> -> BrewLatte()
+		<Americano> -> BrewAmericano(),
+		<Espresso> -> BrewEspresso(),
+		<Latte> -> BrewLatte()
 	end;
 
 	return x;
 );
 
-BrewBlackCoffee: () ==> nat
-BrewBlackCoffee() ==
+BrewAmericano: () ==> nat
+BrewAmericano() ==
 	grinder.Grind(20);
 
 BrewEspresso: () ==> nat
