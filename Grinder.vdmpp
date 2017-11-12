@@ -1,27 +1,42 @@
 class Grinder
 
 types
-public Bean :: weight : nat;
+public Bean :: id : nat
+							 weight : nat1;
 				
 
 instance variables
 math : MATH := new MATH();
 io : IO := new IO();
-beans : set of Bean;
+beans : set of Bean := {};
 
 operations
 
 public Grinder: () ==> Grinder
 Grinder() == (
- let bean1 = mk_Bean(1) in
- let bean2 = mk_Bean(2) in
- let bean3 = mk_Bean(3) in
+ --let bean1 = mk_Bean(1) in
+ --let bean2 = mk_Bean(1) in
+ --let bean3 = mk_Bean(1) in
  --let bean3 = mk_Bean(math.rand(3)) in
- beans := {bean1, bean2, bean3};
+ 
+ --beans := {bean1, bean2, bean3};
+ 
+ 	FillGrinder();
+	FillGrinder();
+ 
 );
 	--bean := new bean
 
-
+public FillGrinder: () ==> ()
+FillGrinder() == (
+	dcl s : nat := 0; 
+	
+	while s <= 100 do 
+		-- create bean with weight between 1 and 3 
+		let b = mk_Bean(s, (math.rand(3) mod 3 + 1) ) in (		
+		s := s + 1;
+		beans := beans union {b}; );
+);
 
 public Grind: nat1 ==> ()
 Grind(w) == (
