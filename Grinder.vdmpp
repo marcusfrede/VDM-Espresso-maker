@@ -21,8 +21,7 @@ Grinder() == (
  
  --beans := {bean1, bean2, bean3};
  
- 	FillGrinder();
-	FillGrinder();
+FillGrinder();
  
 );
 	--bean := new bean
@@ -32,7 +31,6 @@ FillGrinder() == (
 	dcl s : nat := 0; 
 	
 	while s <= 100 do 
-		-- create bean with weight between 1 and 3 
 		let b = mk_Bean(s, (math.rand(3) mod 3 + 1) ) in (		
 		s := s + 1;
 		beans := beans union {b}; );
@@ -43,11 +41,22 @@ Grind(w) == (
 	dcl tot : nat := 0; 
 	for all s in set beans do
 	if tot <= w
-	then tot := tot + s.weight
-	else return
-		
--- what if out off beans? error message!!!
-);
+	then (tot := tot + s.weight; beans := beans \ {s})
+	else return	
+)
+pre EnoughBeans(w); -- what if out off beans? error message!!!
 
+pure EnoughBeans: nat1 ==> bool
+EnoughBeans(w) == 
+	return w <= RemaingBeanWeight();
+
+pure RemaingBeanWeight: () ==> nat
+RemaingBeanWeight() == (
+	dcl tot : nat := 0; 
+	for all s in set beans do
+		tot := tot + s.weight;
+	
+	return tot;
+);
 
 end Grinder
