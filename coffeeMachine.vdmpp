@@ -10,15 +10,39 @@ grinder						  : Grinder;
 
 types
 
-public DrinkType = <BlackCoffee>|<Espresso>|<Latte> 
+public DrinkType = <BlackCoffee> | <Espresso> | <Latte> 
 
 operations
 
-public Brew : DrinkType ==> ()
-Brew(d) ==
- is not yet specified;
+public CoffeeMachine: () ==> CoffeeMachine
+CoffeeMachine() == (
+	grinder := new Grinder();
+	waterTankController := new WaterTankController();
+);
 
+public Brew : DrinkType ==> nat
+Brew(dt) == (
 
+ dcl x : nat := 
+ cases dt:
+		<BlackCoffee> -> BrewBlackCoffee()
+	--	<Espresso> -> BrewEspresso(),
+	--	<Latte> -> BrewLatte()
+	end;
 
+	return x;
+);
 
+BrewBlackCoffee: () ==> nat
+BrewBlackCoffee() ==
+	grinder.Grind(20);
+
+BrewEspresso: () ==> nat
+BrewEspresso() ==
+	 is not yet specified;
+
+BrewLatte: () ==> nat
+BrewLatte() ==
+	 is not yet specified;
+	 
 end CoffeeMachine

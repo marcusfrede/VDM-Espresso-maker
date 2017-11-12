@@ -22,9 +22,7 @@ Grinder() == (
  --beans := {bean1, bean2, bean3};
  
 FillGrinder();
- 
 );
-	--bean := new bean
 
 public FillGrinder: () ==> ()
 FillGrinder() == (
@@ -36,13 +34,15 @@ FillGrinder() == (
 		beans := beans union {b}; );
 );
 
-public Grind: nat1 ==> ()
+public Grind: nat1 ==> nat
 Grind(w) == (
 	dcl tot : nat := 0; 
 	for all s in set beans do
 	if tot <= w
-	then (tot := tot + s.weight; beans := beans \ {s})
-	else return	
+	then (tot := tot + s.weight; 
+				beans := beans \ {s});
+
+	return tot;	
 )
 pre EnoughBeans(w); -- what if out off beans? error message!!!
 
