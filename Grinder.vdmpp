@@ -4,10 +4,12 @@ types
 public Bean :: id : nat
 							 weight : nat1;
 				
-
+public Beanq :: weight : nat1;
+				
 instance variables
 math : MATH := new MATH();
 io : IO := new IO();
+beanss : seq of Beanq := [];
 beans : set of Bean := {};
 
 operations
@@ -26,23 +28,25 @@ FillGrinder();
 
 public FillGrinder: () ==> ()
 FillGrinder() == (
-	dcl s : nat := 0; 
-	
-	while s <= 100 do 
-		let b = mk_Bean(s, (math.rand(3) mod 3 + 1) ) in (		
-		s := s + 1;
-		beans := beans union {b}; );
+	for all s in set {1,...,100} do 
+		beans := beans union {mk_Bean(s, (math.rand(3) mod 3 + 1)) }; 
 );
+/*
+public FillGrinder2: () ==> ()
+FillGrinder2() == (
+	
+	for all s in set {1,...,100} do
+		beanss := beanss ^ [mk_Beanq(math.rand(3) mod 3 + 1)];
+);
+*/
 
-public Grind: nat1 ==> nat
+public Grind: nat1 ==> ()
 Grind(w) == (
 	dcl tot : nat := 0; 
 	for all s in set beans do
 	if tot <= w
 	then (tot := tot + s.weight; 
 				beans := beans \ {s});
-
-	return tot;	
 )
 pre EnoughBeans(w); -- what if out off beans? error message!!!
 

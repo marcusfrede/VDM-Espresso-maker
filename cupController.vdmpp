@@ -1,0 +1,50 @@
+class CupController
+
+types
+public CupSize = <Small> | <Medium> | <Large>; -- move so it's not defined in both coffeemachine and here!!
+public Cup :: volume : CupSize;
+
+instance variables
+cupsSm : seq of Cup := [];
+cupsMd : seq of Cup := [];
+cupsLg : seq of Cup := [];
+maxSmCups  : nat;
+maxMdCups  : nat;
+maxLgCups  : nat;
+inv CupSizeInv(cupsSm, maxSmCups);
+inv CupSizeInv(cupsMd, maxMdCups);
+inv CupSizeInv(cupsLg, maxLgCups);
+
+functions
+CupSizeInv: seq of Cup * nat -> bool
+CupSizeInv(cups,maxCups) ==
+ 	len	cups <= maxCups;
+
+operations
+public CupController: nat * nat * nat ==> CupController
+CupController(small, medium, large) == (
+	maxSmCups  := small;
+	maxMdCups  := medium;
+	maxLgCups  := large;
+	FillCupStacks();
+);
+
+public FillCupStacks: () ==> ()
+FillCupStacks() ==
+	if len cupsSm < maxSmCups
+		then (
+		cupsSm := cupsSm ^ [mk_Cup(<Small>)]; 
+		cupsMd := cupsMd ^ [mk_Cup(<Medium>)]; 
+		cupsLg := cupsLg ^ [mk_Cup(<Large>)]; 
+		FillCupStacks();)
+		else return;
+
+public TakeCup: CupSize ==> ()
+TakeCup(cs) == 
+	cases cs:
+		<Small>  -> cupsSm := tl cupsSm,
+		<Medium> -> cupsMd := tl cupsMd,
+		<Large>  -> cupsLg := tl cupsLg
+	end;
+
+end CupController

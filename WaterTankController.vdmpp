@@ -39,10 +39,11 @@ public GetWaterLevel: () ==> nat
 GetWaterLevel() ==
 	tankLevelSensor.ReadValue();
 
-public BrewTest: () ==> nat
-BrewTest() == (        
-	CoolWater();
-	return tankTempSensor.ReadValue()
+public TakeWater: nat1 ==> ()
+TakeWater(w) == (
+	dcl tot : nat := 0;
+	while tot < w do
+	 	tot := tot + waterPump.WaterOut();
 );
 
 

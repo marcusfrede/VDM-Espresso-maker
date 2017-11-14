@@ -5,11 +5,10 @@ operations
 public WaterIn: () ==> ()
 	WaterIn() ==
 		World`env.IncWaterLevel();
-	
-public WaterOut: () ==> ()
+	*/
+public WaterOut: () ==> nat
 	WaterOut() ==
 		World`env.DecWaterLevel();
-*/
 
 public FillTank: () ==> ()
 	FillTank() == (
@@ -17,7 +16,7 @@ public FillTank: () ==> ()
 			if s = 100 
 	  		then return
 	  			else 
-	         	EmptyTank();	
+	         	FillTank();	
 );
 		
 public EmptyTank: () ==> ()

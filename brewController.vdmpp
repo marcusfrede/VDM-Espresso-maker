@@ -1,0 +1,17 @@
+class BrewController
+
+instance variables 
+waterTankController : WaterTankController := new WaterTankController();
+
+
+operations
+
+TakeWaterFromTank: nat1 ==> ()
+TakeWaterFromTank(amount) ==
+	waterTankController.TakeWater(amount);
+
+public Brew: nat1 * nat1 ==> ()
+Brew(waterAmount, pressure) ==
+	TakeWaterFromTank(waterAmount);
+
+end BrewController

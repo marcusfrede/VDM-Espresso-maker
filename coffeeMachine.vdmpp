@@ -2,15 +2,15 @@ class CoffeeMachine
 
 instance variables
 
-flowController      : FlowController;
-pressureController  : PressureController;
+brewController  		: BrewController;
 waterTankController : WaterTankController;
 motionSensor			  : seq of MotionSensor := [];
 grinder						  : Grinder;
 
 types
 
-public DrinkType = <Americano> | <Espresso> | <Latte> 
+public DrinkType = <Americano> | <Espresso> | <Latte>; 
+public CupSize = <Small> | <Medium> | <Large>;
 
 operations
 
@@ -18,30 +18,28 @@ public CoffeeMachine: () ==> CoffeeMachine
 CoffeeMachine() == (
 	grinder := new Grinder();
 	waterTankController := new WaterTankController();
+	brewController := new BrewController();
 );
 
-public Brew : DrinkType ==> nat
-Brew(dt) == (
-
- dcl x : nat := 
+public Brew : DrinkType ==> ()
+Brew(dt) == 
  cases dt:
 		<Americano> -> BrewAmericano(),
 		<Espresso> -> BrewEspresso(),
 		<Latte> -> BrewLatte()
 	end;
 
-	return x;
+
+BrewAmericano: () ==> ()
+BrewAmericano() == (
+	grinder.Grind(20);
 );
 
-BrewAmericano: () ==> nat
-BrewAmericano() ==
-	grinder.Grind(20);
-
-BrewEspresso: () ==> nat
+BrewEspresso: () ==> ()
 BrewEspresso() ==
 	 is not yet specified;
 
-BrewLatte: () ==> nat
+BrewLatte: () ==> ()
 BrewLatte() ==
 	 is not yet specified;
 	 
