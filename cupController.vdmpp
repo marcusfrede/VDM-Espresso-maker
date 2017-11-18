@@ -1,7 +1,6 @@
-class CupController
+class CupController is subclass of GLOBAL
 
 types
-public CupSize = <Small> | <Medium> | <Large>; -- move so it's not defined in both coffeemachine and here!!
 public Cup :: volume : CupSize;
 
 instance variables

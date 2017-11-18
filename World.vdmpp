@@ -1,16 +1,12 @@
-class World
+class World is subclass of GLOBAL
 
 instance variables
 
-static public env : Environment := new Environment("senario.txt");
-static public timerRef : Time := new Time();
+static public env : Environment := new Environment("scenario.txt", "output.txt");
+static public timerRef : Timer := new Timer();
   
 operations
 
 public Run: () ==> ()
-Run() ==
- (-- start environment creating input
-  env.Run();
- );
-
+Run() == (env.Run(); env.ShowResult());
 end World

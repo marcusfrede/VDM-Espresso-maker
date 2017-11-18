@@ -1,8 +1,8 @@
-class BrewController
+class BrewController is subclass of GLOBAL
 
 instance variables 
 waterTankController : WaterTankController := new WaterTankController();
-
+grinder						  : Grinder := new Grinder();
 
 operations
 
@@ -13,5 +13,31 @@ TakeWaterFromTank(amount) ==
 public Brew: nat1 * nat1 ==> ()
 Brew(waterAmount, pressure) ==
 	TakeWaterFromTank(waterAmount);
+
+
+
+public Start : DrinkType ==> ()
+Start(dt) == 
+ cases dt:
+		<Americano> -> BrewAmericano(),
+		<Espresso> -> BrewEspresso(),
+		<Latte> -> BrewLatte()
+	end;
+
+
+BrewAmericano: () ==> ()
+BrewAmericano() == (
+	grinder.Grind(20);
+);
+
+BrewEspresso: () ==> ()
+BrewEspresso() ==
+	 is not yet specified;
+
+BrewLatte: () ==> ()
+BrewLatte() ==
+	 is not yet specified;
+
+
 
 end BrewController

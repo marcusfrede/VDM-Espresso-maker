@@ -1,46 +1,8 @@
-class CoffeeMachine
+class CoffeeMachine is subclass of GLOBAL
 
 instance variables
 
-brewController  		: BrewController;
-waterTankController : WaterTankController;
+brewController  		: BrewController := new BrewController();
 motionSensor			  : seq of MotionSensor := [];
-grinder						  : Grinder;
-
-types
-
-public DrinkType = <Americano> | <Espresso> | <Latte>; 
-public CupSize = <Small> | <Medium> | <Large>;
-
-operations
-
-public CoffeeMachine: () ==> CoffeeMachine
-CoffeeMachine() == (
-	grinder := new Grinder();
-	waterTankController := new WaterTankController();
-	brewController := new BrewController();
-);
-
-public Brew : DrinkType ==> ()
-Brew(dt) == 
- cases dt:
-		<Americano> -> BrewAmericano(),
-		<Espresso> -> BrewEspresso(),
-		<Latte> -> BrewLatte()
-	end;
-
-
-BrewAmericano: () ==> ()
-BrewAmericano() == (
-	grinder.Grind(20);
-);
-
-BrewEspresso: () ==> ()
-BrewEspresso() ==
-	 is not yet specified;
-
-BrewLatte: () ==> ()
-BrewLatte() ==
-	 is not yet specified;
 	 
 end CoffeeMachine

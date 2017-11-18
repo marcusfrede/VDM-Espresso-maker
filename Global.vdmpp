@@ -1,0 +1,11 @@
+class GLOBAL
+
+types
+	-- Coffee related types
+	public CupSize = <Small> | <Medium> | <Large>;
+	public DrinkType = <Americano> | <Espresso> | <Latte>; 
+
+	-- Time
+	public Time = nat;
+
+end GLOBAL

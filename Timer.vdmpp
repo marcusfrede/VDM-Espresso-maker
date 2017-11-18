@@ -1,12 +1,12 @@
-class Time
+class Timer is subclass of GLOBAL
 
 instance variables
 
-currentTime : nat := 0;
+currentTime : Time := 0;
 
 values
 
-stepLength : nat = 10;
+stepLength : Time = 10;
 
 operations
 
@@ -14,8 +14,8 @@ public StepTime : () ==> ()
 StepTime() ==
   currentTime := currentTime + stepLength;
 
-public GetTime : () ==> nat
+public GetTime : () ==> Time
 GetTime() ==
   return currentTime;
 
-end Time
+end Timer
