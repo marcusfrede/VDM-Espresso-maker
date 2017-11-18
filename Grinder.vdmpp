@@ -10,9 +10,12 @@ instance variables
 math : MATH := new MATH();
 io : IO := new IO();
 beansseq : seq of Beanseq := [];
-beans : set of [Bean] := {};
+beans : set of Bean := {};
+
 
 operations
+
+
 
 public Grinder: () ==> Grinder
 Grinder() == (
@@ -22,13 +25,18 @@ Grinder() == (
  --let bean3 = mk_Bean(math.rand(3)) in
  
  --beans := {bean1, bean2, bean3};
-FillGrinder();
+FillGrinder(100);
 );
 
-public FillGrinder: () ==> ()
-FillGrinder() == 
-	for all s in set {1,...,100} do 
-		beans := beans union {mk_Bean(s, (math.rand(3) mod 3 + 1)) }; 
+
+public FillGrinder: nat1 ==> ()
+FillGrinder(upper) == 
+	beans := {mk_Bean(x,(math.rand(3) mod 3 + 1)) | x in set{1,...,upper}}
+pre upper <= 500
+post card beans <= 500;
+		
+		
+		
 /*
 public FillGrinder2: () ==> ()
 FillGrinder2() ==
