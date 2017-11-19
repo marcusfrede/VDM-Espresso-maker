@@ -6,6 +6,7 @@ public static brewController  		: BrewController := new BrewController();
 public static cupController  			: CupController := new CupController();
 public static waterTankController : WaterTankController := new WaterTankController();
 public static grinder						  : Grinder := new Grinder();
+public static stateController	    : StateController := new StateController();
 
 motionSensor			  : seq of MotionSensor := [];
 	 

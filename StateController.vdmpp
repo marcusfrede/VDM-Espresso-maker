@@ -1,0 +1,18 @@
+class StateController is subclass of GLOBAL
+
+instance variables
+
+private state : State := <Normal>;
+
+operations
+
+public
+ErrorOccurred: () ==> ()
+ErrorOccurred() == 
+	state := <Error>;
+
+pure public
+GetState: () ==> State
+GetState() == return state;
+
+end StateController

@@ -1,47 +1,25 @@
 class BrewController is subclass of GLOBAL
 
-instance variables 
-
-
 operations
 
+pure BrewInv: () ==> bool
+BrewInv() ==
+ return CM`stateController.GetState() <> <Error>;
 
-TakeWaterFromTank: nat1 ==> ()
-TakeWaterFromTank(amount) ==
-	CM`waterTankController.TakeWater(amount);
+pure BrewError: () ==> bool
+BrewError() ==
+ return CM`stateController.GetState() = <Error>;
 
-public Brew: nat1 * nat1 ==> ()
-Brew(waterAmount, -) ==
-	TakeWaterFromTank(waterAmount);
-
-
-public Start : DrinkType ==> ()
-Start(dt) == 
- cases dt:
-		<Americano> -> BrewAmericano(),
-		<Espresso> -> BrewEspresso(),
-		<Latte> -> BrewLatte()
-	end;
-
-
-BrewAmericano: () ==> ()
-BrewAmericano() == (
-	CM`grinder.Grind(20);
-	CM`cupController.TakeCup(<Small>);
-	CM`waterTankController.TakeWater(20);
+public Start : Order ==> ()
+Start(o) == (
+	dcl rec : Recipe := AmountTable(o);
+	if BrewError() then return;
+	CM`grinder.Grind(rec.coffee);
+	if BrewError() then return;
+	CM`cupController.TakeCup(o.#1);
+	if BrewError() then return;
+	CM`waterTankController.TakeWater(rec.water);
 );
-
-BrewEspresso: () ==> ()
-BrewEspresso() == (
---	CM`grinder.Grind(400);
-	CM`cupController.TakeCup(<Medium>);
-	CM`waterTankController.TakeWater(20);
-);
-
-BrewLatte: () ==> ()
-BrewLatte() == 
-	 is not yet specified;
-
 
 
 end BrewController

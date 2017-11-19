@@ -4,12 +4,34 @@ types
 	-- Coffee related types
 	public CupSize = <Small> | <Medium> | <Large>;
 	public DrinkType = <Americano> | <Espresso> | <Latte>; 
+	public Order = CupSize * DrinkType;
 	
+	public mL = nat;
+	public g = nat;
+	
+	public Recipe :: water : mL
+									 coffee : g;  
+										  
+	public Amount = map Order to Recipe;							
+	
+	public State = <Normal> | <Error>; 
 	-- Time
 	public Time = nat;
 
 values
 	public minWaterTankTemp = 5;
 	public maxWaterTankTemp = 6;
+	public minWaterTankLevel = 0;
+	public maxWaterTankLevel = 10000;
 
+instance variables 
+	private amount : Amount := {mk_ (<Small>, <Espresso>)  |-> mk_Recipe(150, 7),	mk_ (<Medium>, <Espresso>)  |-> mk_Recipe(30, 14), 	mk_ (<Large>, <Espresso>)  |-> mk_Recipe(60, 21),
+														  mk_ (<Small>, <Americano>) |-> mk_Recipe(150, 7), mk_ (<Medium>, <Americano>) |-> mk_Recipe(300, 14), mk_ (<Large>, <Americano>) |-> mk_Recipe(600, 21),
+														  mk_ (<Small>, <Latte>)     |-> mk_Recipe(150, 7), mk_ (<Medium>, <Latte>)  		|-> mk_Recipe(300, 14), mk_ (<Large>, <Latte>)     |-> mk_Recipe(600, 21)};
+														 
+operations
+	public AmountTable: Order ==> Recipe
+	AmountTable(o) ==
+		return amount(o);
+	
 end GLOBAL

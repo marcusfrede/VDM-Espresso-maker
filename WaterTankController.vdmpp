@@ -1,24 +1,28 @@
-class WaterTankController
+class WaterTankController is subclass of GLOBAL
 
 instance variables
 public tankTempSensor 		: TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>);
-tankLevelSensor 	: LevelSensor := new LevelSensor(1, <LEVELSENSOR>);
+public tankLevelSensor 	: LevelSensor := new LevelSensor(1, <LEVELSENSOR>);
 heatingElement 		: HeatingElement := new HeatingElement(1);
 coolingElement 		: CoolingElement := new CoolingElement(1);
 waterPump					: WaterPump := new WaterPump();
 inv TempInv(tankTempSensor);
+inv LevelInv(tankLevelSensor);
 
 functions
 
 -- temp must be higher than 0 and below 40 to prevent growth of bacteria 
 TempInv: TemperatureSensor -> bool
-TempInv(ts) == (
-	ts.ReadValue() >= 0 and ts.ReadValue() <= 40
+TempInv(s) == (
+	s.ReadValue() >= 0 and s.ReadValue() <= 40
+);
+
+LevelInv: LevelSensor -> bool
+LevelInv(s) == (
+	s.ReadValue() >= minWaterTankLevel and s.ReadValue() <= maxWaterTankLevel
 );
 
 operations
-
-
 
 public FillTank: () ==> ()
 FillTank() ==    

@@ -15,7 +15,6 @@ private finished : bool := false;
 
 types
 
-public Order = CupSize * DrinkType;
 public Inline	= Order * Time;
 public Outline = Order * nat * nat;  
 
@@ -90,7 +89,16 @@ CreateSignal() ==
    	(if time <= curtime
     	then (--SetTemp(temp);
     			
+    			if CM`stateController.GetState() = <Error>
+    			then 
+    			(
+			      IO`print("\n\n\n*** System error occurred ***\n*** Please call maintenace staff ***\n");
+			      inlines := [];
+			      return;
+    			);
+    			    			
     			CM`waterTankController.tankTempSensor.Step();
+    			CM`waterTankController.tankLevelSensor.Step();
     			
     			if CM`waterTankController.tankTempSensor.ReadValue() > maxWaterTankTemp
     			then ( IO`print("\nWater cooling needed!\n"); CM`waterTankController.CoolWater(); return);
@@ -99,12 +107,13 @@ CreateSignal() ==
     			then ( IO`print("\nWater heating needed!\n"); CM`waterTankController.HeatWater(); return);
     			
     			if CM`waterTankController.tankTempSensor.ReadValue() <= maxWaterTankTemp and
-    				 CM`waterTankController.tankTempSensor.ReadValue() >= minWaterTankTemp				
+    				 CM`waterTankController.tankTempSensor.ReadValue() >= minWaterTankTemp and
+    				 CM`stateController.GetState() = <Normal>				
     			then
     			(
     				IO`print("\nWater temperature ok\n");
     			
-						CM`brewController.Start(order.#2);
+						CM`brewController.Start(order);
 	    			
 	          IO`print("\n\nNew env values set");
 	          
@@ -117,6 +126,7 @@ CreateSignal() ==
 	          IO`print(order.#1);
 	          IO`print("\nOrder: ");
 	          IO`print(order.#2);
+	      
 	          handleEvent(order, waterLevel, curtime);
 	          
 	          inlines := tl inlines; -- take tail and assign to inlines
@@ -126,6 +136,15 @@ CreateSignal() ==
    	);
   )
   else (finished := true;
+  
+        IO`print("\n\n--- Shutdown report ---");
+
+	      IO`printf("\nRemaining water level: %1s",[waterLevel]);
+	      IO`printf("\nCurrent water temperature: %1s",[waterTemp]);
+		    IO`printf("\nRemaining beans: %1s",[CM`grinder.RemaingBeanWeight()]);
+	 		  IO`printf("\nRemaining cups: %1s %2s %3s", CM`cupController.RemainingCups());
+	 
+      	IO`print("\n--- System terminated ---\n");
         return
        );
  );	
