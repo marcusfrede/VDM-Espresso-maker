@@ -25,16 +25,19 @@ LevelInv(s) == (
 operations
 
 public FillTank: () ==> ()
-FillTank() ==    
-	waterPump.FillTank()
-pre tankLevelSensor.ReadValue() < 0
-post tankLevelSensor.ReadValue() = 100;
+FillTank() == (   
+	IO`printf("\nFilling water tank to %1s ml", [maxWaterTankLevel]);
+	waterPump.FillTank(maxWaterTankLevel);
+	tankLevelSensor.Step();
+	)
+pre tankLevelSensor.ReadValue() < maxWaterTankLevel
+post tankLevelSensor.ReadValue() = maxWaterTankLevel;
 
 public EmptyTank: () ==> ()
 EmptyTank() ==          
 	waterPump.EmptyTank()
-pre tankLevelSensor.ReadValue() > 0
-post tankLevelSensor.ReadValue() = 0;
+pre tankLevelSensor.ReadValue() > minWaterTankLevel
+post tankLevelSensor.ReadValue() = minWaterTankLevel;
 
 public HeatWater: () ==> ()
 HeatWater() ==         

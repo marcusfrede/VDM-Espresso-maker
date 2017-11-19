@@ -22,7 +22,7 @@ values
 	public minWaterTankTemp = 5;
 	public maxWaterTankTemp = 6;
 	public minWaterTankLevel = 0;
-	public maxWaterTankLevel = 10000;
+	public maxWaterTankLevel = 1000;
 
 instance variables 
 	private amount : Amount := {mk_ (<Small>, <Espresso>)  |-> mk_Recipe(150, 7),	mk_ (<Medium>, <Espresso>)  |-> mk_Recipe(30, 14), 	mk_ (<Large>, <Espresso>)  |-> mk_Recipe(60, 21),

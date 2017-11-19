@@ -1,4 +1,4 @@
-mk_(5,10000,500,
+mk_(5,800,500,
 [mk_(mk_(<Small>,<Americano>), 10),
  mk_(mk_(<Large>,<Americano>), 50),
  mk_(mk_(<Medium>,<Espresso>), 60),

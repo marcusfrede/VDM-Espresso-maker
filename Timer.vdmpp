@@ -7,7 +7,7 @@ private static timerInstance : Timer := new Timer();
 
 values
 
-stepLength : Time = 10;
+stepLength : Time = 1;
 
 operations
 

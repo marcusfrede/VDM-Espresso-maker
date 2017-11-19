@@ -40,6 +40,7 @@ Environment: seq of char * seq of char ==> Environment
 			waterTemp := t;
 			waterLevel := l;
 			
+			
       IO`print("\n--- Booting system ---");
 
       IO`printf("\nInitial water level: %1s",[waterLevel]);
@@ -49,7 +50,6 @@ Environment: seq of char * seq of char ==> Environment
 
       CM`grinder.FillGrinder(b);
       CM`cupController.FillCups(20,20,20);
-      
       
       IO`print("\n--- System booted successfully ---\n");
       
@@ -89,6 +89,8 @@ CreateSignal() ==
    	(if time <= curtime
     	then (--SetTemp(temp);
     			
+    			
+    			
     			if CM`stateController.GetState() = <Error>
     			then 
     			(
@@ -99,6 +101,11 @@ CreateSignal() ==
     			    			
     			CM`waterTankController.tankTempSensor.Step();
     			CM`waterTankController.tankLevelSensor.Step();
+    			
+    			
+    			CM`waterTankController.FillTank();
+    			
+    			
     			
     			if CM`waterTankController.tankTempSensor.ReadValue() > maxWaterTankTemp
     			then ( IO`print("\nWater cooling needed!\n"); CM`waterTankController.CoolWater(); return);
@@ -193,7 +200,7 @@ public DecTemp: () ==> nat
 		return waterTemp;
 );
 
-public GetWaterLevel: () ==> nat
+pure public GetWaterLevel: () ==> nat
 	GetWaterLevel() ==
 		return waterLevel;
 

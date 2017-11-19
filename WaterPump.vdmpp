@@ -14,13 +14,13 @@ public WaterOut: () ==> nat
 	WaterOut() ==
 		World`env.DecWaterLevel();
 
-public FillTank: () ==> ()
-	FillTank() == 
-		let s : nat = World`env.IncWaterLevel() in
-			if s < 100 
-	  	then FillTank()
+public FillTank: nat1 ==> ()
+	FillTank(up) == ( 
+			if World`env.IncWaterLevel() < up
+	  	then FillTank(up)
 	  	else return;
-
+	)
+post World`env.GetWaterLevel() = up;
 
 public EmptyTank: () ==> ()
 	EmptyTank() == 
