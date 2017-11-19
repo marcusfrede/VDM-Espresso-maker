@@ -1,15 +1,11 @@
-class CoffeeMachine is subclass of GLOBAL
+class CM is subclass of GLOBAL
 
 instance variables
 
-public brewController  		: BrewController;
+public static brewController  		: BrewController := new BrewController();
+public static waterTankController : WaterTankController := new WaterTankController();
+public static grinder						  : Grinder := new Grinder();
+
 motionSensor			  : seq of MotionSensor := [];
 	 
-operations 
-
-public
-CoffeeMachine: nat1 ==> CoffeeMachine	 
-CoffeeMachine(noOfBeans) == (
-	brewController := new BrewController(noOfBeans);
-);
-end CoffeeMachine
+end CM

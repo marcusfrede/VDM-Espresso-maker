@@ -11,11 +11,14 @@ inv TempInv(tankTempSensor);
 functions
 
 -- temp must be higher than 4 and below 9 to prevent growth of bacteria 
-TempInv: TemperatureSensor -> bool
-TempInv(ts) == 
-	ts.ReadValue() >= 4 and ts.ReadValue() <= 9;
+TempInv: TemperatureSensor +> bool
+TempInv(ts) == (
+	ts.ReadValue() >= 4 and ts.ReadValue() <= 9
+);
 
 operations
+
+
 
 public FillTank: () ==> ()
 FillTank() ==    

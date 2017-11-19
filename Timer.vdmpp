@@ -3,6 +3,7 @@ class Timer is subclass of GLOBAL
 instance variables
 
 currentTime : Time := 0;
+private static timerInstance : Timer := new Timer();
 
 values
 
@@ -10,12 +11,16 @@ stepLength : Time = 10;
 
 operations
 
-public StepTime : () ==> ()
-StepTime() ==
-  currentTime := currentTime + stepLength;
+public static GetInstance: () ==> Timer
+GetInstance() == 
+	return timerInstance;
 
-public GetTime : () ==> Time
-GetTime() ==
-  return currentTime;
+public StepTime : () ==> ()
+StepTime() == 
+	currentTime := currentTime + stepLength;
+	
+public GetTime : () ==> nat 
+GetTime() == 
+	return currentTime;
 
 end Timer

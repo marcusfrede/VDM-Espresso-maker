@@ -4,18 +4,14 @@ types
 public Bean :: id : nat
 							 weight : nat1;
 				
-public Beanseq :: weight : nat1;
 				
 instance variables
 math : MATH := new MATH();
 io : IO := new IO();
-beansseq : seq of Beanseq := [];
 beans : set of Bean := {};
 
 
 operations
-
-
 
 public Grinder: nat ==> Grinder
 Grinder(noOfBeans) == (

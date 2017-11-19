@@ -2,10 +2,14 @@ class World is subclass of GLOBAL
 
 instance variables
 
-static public env : Environment := new Environment("scenario.txt", "output.txt");
-static public timerRef : Timer := new Timer();
+public static env : [Environment] := nil; 
+public static timerRef : Timer := Timer`GetInstance();
   
 operations
+
+public World : () ==> World
+World() ==
+env := new Environment("scenario.txt", "output.txt");
 
 public Run: () ==> ()
 Run() == (env.Run(); env.ShowResult());

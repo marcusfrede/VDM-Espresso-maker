@@ -1,1 +1,1 @@
-[mk_(mk_(<Small>, <Americano>), 10, 500), mk_(mk_(<Large>, <Americano>), 10, 1200), mk_(mk_(<Medium>, <Americano>), 10, 2100), mk_(mk_(<Small>, <Americano>), 10, 2999)]
+[mk_(mk_(<Small>, <Americano>), 10, 10), mk_(mk_(<Large>, <Americano>), 10, 50), mk_(mk_(<Medium>, <Espresso>), 10, 200), mk_(mk_(<Small>, <Americano>), 10, 500)]

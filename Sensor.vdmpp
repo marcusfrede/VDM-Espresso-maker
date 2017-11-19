@@ -5,9 +5,9 @@ public sensorType 	= <TEMPSENSOR> | <PRESSURESENSOR> | <LEVELSENSOR> | <NONE>;
 
 instance variables
 
-protected ID	: nat;
-protected Type : sensorType;
-protected Value	: int;
+protected ID	: [nat] := nil;
+protected Type : sensorType :=  <NONE>;
+protected Value	: [int] := nil;
 
 operations
 
