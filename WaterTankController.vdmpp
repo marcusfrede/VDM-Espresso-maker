@@ -18,14 +18,16 @@ TempInv(ts) ==
 operations
 
 public FillTank: () ==> ()
-FillTank() == (           
-	waterPump.FillTank();
-);
+FillTank() ==    
+	waterPump.FillTank()
+pre tankLevelSensor.ReadValue() < 0
+post tankLevelSensor.ReadValue() = 100;
 
 public EmptyTank: () ==> ()
-EmptyTank() == (           
-	waterPump.EmptyTank();
-);
+EmptyTank() ==          
+	waterPump.EmptyTank()
+pre tankLevelSensor.ReadValue() > 0
+post tankLevelSensor.ReadValue() = 0;
 
 public HeatWater: () ==> ()
 HeatWater() ==         
@@ -35,16 +37,12 @@ public CoolWater: () ==> ()
 CoolWater() ==         
 	coolingElement.Step();
 
-public GetWaterLevel: () ==> nat
-GetWaterLevel() ==
-	tankLevelSensor.ReadValue();
-
 public TakeWater: nat1 ==> ()
 TakeWater(w) == (
 	dcl tot : nat := 0;
 	while tot < w do
 	 	tot := tot + waterPump.WaterOut();
-);
+); -- kan laves med recursion!!!
 
 
 end WaterTankController

@@ -8,7 +8,6 @@ instance variables
 protected ID	: nat;
 protected Type : sensorType;
 protected Value	: int;
-protected Env	: Environment;
 
 operations
 

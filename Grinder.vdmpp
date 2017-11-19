@@ -17,33 +17,21 @@ operations
 
 
 
-public Grinder: () ==> Grinder
-Grinder() == (
- --let bean1 = mk_Bean(1) in
- --let bean2 = mk_Bean(1) in
- --let bean3 = mk_Bean(1) in
- --let bean3 = mk_Bean(math.rand(3)) in
- 
- --beans := {bean1, bean2, bean3};
-FillGrinder(100);
+public Grinder: nat ==> Grinder
+Grinder(noOfBeans) == (
+	FillGrinder(noOfBeans);
 );
 
 
 public FillGrinder: nat1 ==> ()
-FillGrinder(upper) == 
+FillGrinder(upper) == (
+	io.printf("\nFilling Grinder with %1s beans", [upper]);
 	beans := {mk_Bean(x,(math.rand(3) mod 3 + 1)) | x in set{1,...,upper}}
+)
 pre upper <= 500
 post card beans <= 500;
+	
 		
-		
-		
-/*
-public FillGrinder2: () ==> ()
-FillGrinder2() ==
-	for all s in set {1,...,100} do
-		beansseq := beansseq ^ [mk_Beanseq(math.rand(3) mod 3 + 1)];
-*/
-
 public Grind: nat1 ==> ()
 Grind(w) == (
 	dcl tot : nat := 0; 
@@ -57,6 +45,7 @@ pre EnoughBeans(w); -- what if out off beans? error message!!!
 pure EnoughBeans: nat1 ==> bool
 EnoughBeans(w) == 
 	return w <= RemaingBeanWeight();
+
 
 pure RemaingBeanWeight: () ==> nat
 RemaingBeanWeight() == (

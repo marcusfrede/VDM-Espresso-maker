@@ -4,7 +4,8 @@ types
 	-- Coffee related types
 	public CupSize = <Small> | <Medium> | <Large>;
 	public DrinkType = <Americano> | <Espresso> | <Latte>; 
-
+	public Order = CupSize * DrinkType;
+	
 	-- Time
 	public Time = nat;
 

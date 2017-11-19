@@ -2,7 +2,14 @@ class CoffeeMachine is subclass of GLOBAL
 
 instance variables
 
-brewController  		: BrewController := new BrewController();
+public brewController  		: BrewController;
 motionSensor			  : seq of MotionSensor := [];
 	 
+operations 
+
+public
+CoffeeMachine: nat1 ==> CoffeeMachine	 
+CoffeeMachine(noOfBeans) == (
+	brewController := new BrewController(noOfBeans);
+);
 end CoffeeMachine

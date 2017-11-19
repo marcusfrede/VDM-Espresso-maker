@@ -3,7 +3,6 @@ class CoolingElement
 instance variables
 
 protected ID	: nat;
-protected Env	: Environment;
 
 operations
 

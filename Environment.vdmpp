@@ -19,11 +19,12 @@ private	outputFile : seq of char := "";
 private simtime	 : nat;
 private finished : bool := false;
 
-
+private coffeeMachine : CoffeeMachine;
 
 types
 
-public Order = CupSize * DrinkType;
+
+
 public Inline	= Order * nat * nat;
 public Outline = Order * nat * nat;  
 
@@ -39,12 +40,14 @@ operations
 
 --- Env operations ---
 
-public Environment: seq of char * seq of char ==> Environment
+public 
+Environment: seq of char * seq of char ==> Environment
   Environment(fileIn, fileOut) ==
-   (def mk_ (-,mk_(t,input)) = io.freadval[nat * seq of Inline](fileIn) 
+   (def mk_ (-,mk_(t,b,input)) = io.freadval[nat * nat * seq of Inline](fileIn) 
     in
      (inlines := input;
       simtime := t;
+      coffeeMachine := new CoffeeMachine(b);
       outputFile := fileOut;
      );
   
@@ -59,6 +62,9 @@ Run () == (
  	do
  	(CreateSignal();
    -- step rest of model
+   
+   
+   
    World`timerRef.StepTime();
   );
 );
@@ -75,6 +81,9 @@ CreateSignal() ==
   in
    (if time <= curtime
     then (SetTemp(temp);
+    			
+    			coffeeMachine.brewController.Start(order.#2);
+    			
           IO`print("\n\nNew env values set");
           IO`print("\nAt time: ");
           IO`print(time);

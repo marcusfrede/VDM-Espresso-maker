@@ -3,7 +3,6 @@ class HeatingElement
 instance variables
 
 protected ID	: nat;
-protected Env	: Environment;
 
 operations
 
