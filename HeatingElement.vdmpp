@@ -15,7 +15,11 @@ public GetID: () ==> nat
 		return ID;
 
 public Step: () ==> ()
-	Step() ==
-		World`env.IncTemp();
-		
+	Step() == (
+		dcl otmp : nat := World`env.ReadTemp();
+		dcl ntmp : nat := World`env.IncTemp();	
+		IO`printf("\nIncremented temperature from %1s to %2s", [otmp,ntmp]);		
+)
+--post World`env.ReadTemp() = World`env.ReadTemp() + 1
+
 end HeatingElement

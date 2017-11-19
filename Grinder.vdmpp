@@ -44,7 +44,7 @@ FillGrinder(upper) == (
 pre upper <= 500
 post card beans <= 500;
 
-/*
+
 public Grind: nat1 ==> ()
 Grind(w) == (
 	dcl tot : nat := 0;
@@ -57,16 +57,16 @@ Grind(w) == (
 	beans := beans \ gri;
 )
 pre EnoughBeans(w); -- what if out off beans? error message!!!
-*/
 
-public Grind: int ==> ()
-Grind(w) == (	
+/*
+public Grind2: int ==> ()
+Grind2(w) == (	
 	if w > 0 then (
 		sbeans := tl sbeans;
-		Grind(w - (hd sbeans).weight);)
+		Grind2(w - (hd sbeans).weight);)
 );
-	
-	
+*/
+/*
 public Grind4: nat1 ==> ()
 Grind4(w) == (
  dcl tmp : set of Bean := {};
@@ -83,7 +83,7 @@ Grind2(w) == (
 				beans := beans \ {s});
 )
 pre EnoughBeans(w); -- what if out off beans? error message!!!
-
+*/
 pure EnoughBeans: nat1 ==> bool
 EnoughBeans(w) == 
 	return w <= RemaingBeanWeight();

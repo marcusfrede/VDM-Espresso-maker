@@ -2,16 +2,16 @@ class TemperatureSensor is subclass of Sensor
 
 operations
 
-public TemperatureSensor: nat * sensorType * nat ==> TemperatureSensor
-	TemperatureSensor (id, type, val) ==
+public TemperatureSensor: nat * sensorType ==> TemperatureSensor
+	TemperatureSensor (id, type) ==
 		(ID := id;
 		Type := type;
-		Value := val;
 		);
 
 public Step: () ==> ()
-	Step() ==
-		(Value := World`env.ReadTemp();
-		);
+	Step() == ( 
+		Value := World`env.ReadTemp();
+	--	IO`printf("\nCurrent water temperature %1s", [Value]);
+);
 
 end TemperatureSensor

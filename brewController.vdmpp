@@ -28,12 +28,14 @@ BrewAmericano: () ==> ()
 BrewAmericano() == (
 	CM`grinder.Grind(20);
 	CM`cupController.TakeCup(<Small>);
+	CM`waterTankController.TakeWater(20);
 );
 
 BrewEspresso: () ==> ()
 BrewEspresso() == (
 --	CM`grinder.Grind(400);
 	CM`cupController.TakeCup(<Medium>);
+	CM`waterTankController.TakeWater(20);
 );
 
 BrewLatte: () ==> ()

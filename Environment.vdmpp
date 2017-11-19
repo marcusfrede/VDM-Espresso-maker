@@ -3,11 +3,10 @@ class Environment is subclass of GLOBAL
 instance variables
 
 
-private waterTemp   : nat := 5;
-private waterLevel  : nat := 10;
+private waterTemp   : nat := 0;
+private waterLevel  : nat := 0;
 
 inv LevelInv(waterLevel);
-
 
 private inlines	 : seq of Inline := [];
 private outlines : seq of Outline := [];
@@ -16,15 +15,13 @@ private finished : bool := false;
 
 types
 
-
 public Order = CupSize * DrinkType;
 public Inline	= Order * Time;
 public Outline = Order * nat * nat;  
 
 
-
-
 functions
+
 LevelInv: nat -> bool
 LevelInv(lvl) == 
 	lvl >= 0;
@@ -37,16 +34,26 @@ public
 Environment: seq of char * seq of char ==> Environment
   Environment(fileIn, fileOut) ==
 --   (def mk_ (-,mk_(t,b,input)) = IO`freadval[nat * nat * seq of Inline](fileIn) 
-   (def mk_ (-,mk_(b,input)) = IO`freadval[nat * seq of Inline](fileIn) 
+   (def mk_ (-,mk_(t,l,b,input)) = IO`freadval[nat * nat * nat * seq of Inline](fileIn) 
     in
      (inlines := input;
-     -- simtime := t;
 
+			waterTemp := t;
+			waterLevel := l;
+			
       IO`print("\n--- Booting system ---");
+
+      IO`printf("\nInitial water level: %1s",[waterLevel]);
+      IO`printf("\nInitial water temperature: %1s",[waterTemp]);
+
 
 
       CM`grinder.FillGrinder(b);
       CM`cupController.FillCups(20,20,20);
+      
+      
+      IO`print("\n--- System booted successfully ---\n");
+      
       
       outputFile := fileOut;
      );
@@ -83,25 +90,40 @@ CreateSignal() ==
    	(if time <= curtime
     	then (--SetTemp(temp);
     			
-    			CM`brewController.Start(order.#2);
+    			CM`waterTankController.tankTempSensor.Step();
     			
-          IO`print("\n\nNew env values set");
-          
-          IO`print("\nAt time: ");
-          IO`print(time);
-          IO`print("\ncur time: ");
-          IO`print(curtime);
-          
-          IO`print("\ncupsize: ");
-          IO`print(order.#1);
-          IO`print("\nOrder: ");
-          IO`print(order.#2);
-          handleEvent(order, waterLevel, curtime);
-          
-          inlines := tl inlines; -- take tail and assign to inlines
-          return
-         );
-   );
+    			if CM`waterTankController.tankTempSensor.ReadValue() > maxWaterTankTemp
+    			then ( IO`print("\nWater cooling needed!\n"); CM`waterTankController.CoolWater(); return);
+    			 			
+    			if CM`waterTankController.tankTempSensor.ReadValue() < minWaterTankTemp		
+    			then ( IO`print("\nWater heating needed!\n"); CM`waterTankController.HeatWater(); return);
+    			
+    			if CM`waterTankController.tankTempSensor.ReadValue() <= maxWaterTankTemp and
+    				 CM`waterTankController.tankTempSensor.ReadValue() >= minWaterTankTemp				
+    			then
+    			(
+    				IO`print("\nWater temperature ok\n");
+    			
+						CM`brewController.Start(order.#2);
+	    			
+	          IO`print("\n\nNew env values set");
+	          
+	          IO`print("\nAt time: ");
+	          IO`print(time);
+	          IO`print("\ncur time: ");
+	          IO`print(curtime);
+	          
+	          IO`print("\ncupsize: ");
+	          IO`print(order.#1);
+	          IO`print("\nOrder: ");
+	          IO`print(order.#2);
+	          handleEvent(order, waterLevel, curtime);
+	          
+	          inlines := tl inlines; -- take tail and assign to inlines
+	          return
+          );
+       );
+   	);
   )
   else (finished := true;
         return
@@ -136,21 +158,21 @@ isFinished () == return inlines = [] and finished;
 
 --- Coffee ---
 
-public ReadTemp: () ==> nat
+pure public ReadTemp: () ==> nat
 	ReadTemp() ==
 		return waterTemp;
 
-public IncTemp: () ==> ()
-	IncTemp() ==
+public IncTemp: () ==> nat
+	IncTemp() == (
 		waterTemp := waterTemp + 1;
+		return waterTemp
+);
 
-public DecTemp: () ==> ()
-	DecTemp() ==
+public DecTemp: () ==> nat
+	DecTemp() == (
 		waterTemp := waterTemp - 1;
-
-public SetTemp: nat ==> ()
-	SetTemp(t) ==
-		waterTemp := t;
+		return waterTemp;
+);
 
 public GetWaterLevel: () ==> nat
 	GetWaterLevel() ==

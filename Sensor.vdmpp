@@ -7,7 +7,7 @@ instance variables
 
 protected ID	: [nat] := nil;
 protected Type : sensorType :=  <NONE>;
-protected Value	: [int] := nil;
+protected Value	: [int] := 0;
 
 operations
 

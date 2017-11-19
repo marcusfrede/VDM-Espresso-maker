@@ -8,4 +8,8 @@ types
 	-- Time
 	public Time = nat;
 
+values
+	public minWaterTankTemp = 5;
+	public maxWaterTankTemp = 6;
+
 end GLOBAL

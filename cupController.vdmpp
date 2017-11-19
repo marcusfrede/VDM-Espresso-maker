@@ -61,7 +61,8 @@ FillCupStackSmall(n) ==
 		cupsSm := cupsSm ^ [mk_Cup(<Small>,false)]; 
 		FillCupStackSmall(n);)
 		else return;
-
+		
+		
 private FillCupStackMedium: nat ==> ()
 FillCupStackMedium(n) ==
 	if len cupsMd < n

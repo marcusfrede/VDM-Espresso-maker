@@ -2,11 +2,10 @@ class LevelSensor is subclass of Sensor
 
 operations
 
-public LevelSensor: nat * sensorType * nat ==> LevelSensor
-	LevelSensor (id, type, val) ==
+public LevelSensor: nat * sensorType ==> LevelSensor
+	LevelSensor (id, type) ==
 		(ID := id;
 		Type := type;
-		Value := val;
 		);
 
 public Step: () ==> ()

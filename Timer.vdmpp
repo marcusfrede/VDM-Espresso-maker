@@ -16,8 +16,10 @@ GetInstance() ==
 	return timerInstance;
 
 public StepTime : () ==> ()
-StepTime() == 
+StepTime() == (
 	currentTime := currentTime + stepLength;
+--	IO`printf("\nSTEP %1s", [currentTime]);	
+);
 	
 public GetTime : () ==> nat 
 GetTime() == 
