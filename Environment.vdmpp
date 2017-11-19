@@ -46,6 +46,8 @@ Environment: seq of char * seq of char ==> Environment
 
 
       CM`grinder.FillGrinder(b);
+      CM`cupController.FillCups(20,20,20);
+      
       outputFile := fileOut;
      );
   
@@ -84,8 +86,12 @@ CreateSignal() ==
     			CM`brewController.Start(order.#2);
     			
           IO`print("\n\nNew env values set");
+          
           IO`print("\nAt time: ");
+          IO`print(time);
+          IO`print("\ncur time: ");
           IO`print(curtime);
+          
           IO`print("\ncupsize: ");
           IO`print(order.#1);
           IO`print("\nOrder: ");

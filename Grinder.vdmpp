@@ -9,9 +9,25 @@ instance variables
 math : MATH := new MATH();
 io : IO := new IO();
 beans : set of Bean := {};
+sbeans : seq of Bean := [];
+
+
+functions
 
 
 operations
+
+public 
+CalculateWeight: set of Bean ==> nat
+CalculateWeight(sb) == (
+	dcl tot : nat := 0; 
+	for all s in set sb do
+		tot := tot + s.weight;
+	
+	return tot;
+);
+
+
 
 public Grinder: nat ==> Grinder
 Grinder(noOfBeans) == (
@@ -22,14 +38,44 @@ Grinder(noOfBeans) == (
 public FillGrinder: nat1 ==> ()
 FillGrinder(upper) == (
 	io.printf("\nFilling Grinder with %1s beans", [upper]);
-	beans := {mk_Bean(x,(math.rand(3) mod 3 + 1)) | x in set{1,...,upper}}
+	beans := {mk_Bean(x,(math.rand(3) mod 3 + 1)) | x in set{1,...,upper}};
+	sbeans := [mk_Bean(x,(math.rand(3) mod 3 + 1)) | x in set{1,...,upper}];
 )
 pre upper <= 500
 post card beans <= 500;
-	
-		
+
+/*
 public Grind: nat1 ==> ()
 Grind(w) == (
+	dcl tot : nat := 0;
+	dcl gri : set of Bean := {};
+	for all s in set beans do
+	if tot <= w
+	then (tot := tot + s.weight; 
+				gri := gri union {s});
+	
+	beans := beans \ gri;
+)
+pre EnoughBeans(w); -- what if out off beans? error message!!!
+*/
+
+public Grind: int ==> ()
+Grind(w) == (	
+	if w > 0 then (
+		sbeans := tl sbeans;
+		Grind(w - (hd sbeans).weight);)
+);
+	
+	
+public Grind4: nat1 ==> ()
+Grind4(w) == (
+ dcl tmp : set of Bean := {};
+	tmp := {x | x in set beans & CalculateWeight({x}) < w };
+	beans := beans \ tmp;
+);	
+	
+public Grind2: nat1 ==> ()	-- slow grind is faster
+Grind2(w) == (
 	dcl tot : nat := 0; 
 	for all s in set beans do
 	if tot <= w

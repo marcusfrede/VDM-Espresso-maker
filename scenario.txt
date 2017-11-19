@@ -1,5 +1,5 @@
-mk_(200,
+mk_(500,
 [mk_(mk_(<Small>,<Americano>), 10),
  mk_(mk_(<Large>,<Americano>), 50),
- mk_(mk_(<Medium>,<Espresso>), 200),
+ mk_(mk_(<Medium>,<Espresso>), 60),
  mk_(mk_(<Small>,<Americano>), 500)])

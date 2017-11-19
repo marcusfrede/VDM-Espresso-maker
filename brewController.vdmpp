@@ -27,14 +27,17 @@ Start(dt) ==
 BrewAmericano: () ==> ()
 BrewAmericano() == (
 	CM`grinder.Grind(20);
+	CM`cupController.TakeCup(<Small>);
 );
 
 BrewEspresso: () ==> ()
-BrewEspresso() ==
-	CM`grinder.Grind(400);
+BrewEspresso() == (
+--	CM`grinder.Grind(400);
+	CM`cupController.TakeCup(<Medium>);
+);
 
 BrewLatte: () ==> ()
-BrewLatte() ==
+BrewLatte() == 
 	 is not yet specified;
 
 
