@@ -18,7 +18,7 @@ GetInstance() ==
 public StepTime : () ==> ()
 StepTime() == (
 	currentTime := currentTime + stepLength;
-  if World`env.verbose then	IO`printf("\nSTEP %1s", [currentTime]);	
+  if World`env.Verbose() then	IO`printf("\nSTEP %1s", [currentTime]);	
 );
 	
 public GetTime : () ==> nat 

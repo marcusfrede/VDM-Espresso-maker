@@ -2,24 +2,20 @@ class Environment is subclass of GLOBAL
 
 instance variables
 
-
 private waterTemp   : nat := 0;
 private waterLevel  : nat := 0;
-
 inv LevelInv(waterLevel);
 
 private inlines	 : seq of Inline := [];
 private outlines : seq of Outline := [];
 private	outputFile : seq of char := "";
 private finished : bool := false;
-
-public verbose : bool := false;
+private verbose : bool := false;
 
 types
 
-public Inline	= Order * Time;
-public Outline = Order * nat * nat;  
-
+private Inline	= Order * Time;
+private Outline = Order * nat * nat;  
 
 functions
 
@@ -37,28 +33,20 @@ Environment: seq of char * seq of char ==> Environment
 --   (def mk_ (-,mk_(t,b,input)) = IO`freadval[nat * nat * seq of Inline](fileIn) 
    (def mk_ (-,mk_(v,t,l,b,input)) = IO`freadval[bool * nat * nat * nat * seq of Inline](fileIn) 
     in
-     (inlines := input;
-
+     (
+     	inlines := input;
 			verbose := v;
 			waterTemp := t;
 			waterLevel := l;
-			
-			
+      outputFile := fileOut;
+					   
       IO`print("\n--- Booting system ---");
-
       IO`printf("\nInitial water level: %1s",[waterLevel]);
       IO`printf("\nInitial water temperature: %1s",[waterTemp]);
-
-
-
       CM`grinder.FillGrinder(b);
       IO`printf("\nRemaining bean weight: %1s",[CM`grinder.RemaingBeanWeight()]);
-      CM`cupController.FillCups(20,20,20);
-      
-      IO`print("\n--- System booted successfully ---\n");
-      
-      
-      outputFile := fileOut;
+      CM`cupController.FillCups(20,20,20);   
+      IO`print("\n--- System booted successfully ---\n");        
      );
   
    );
@@ -66,16 +54,10 @@ Environment: seq of char * seq of char ==> Environment
 public 
 Run: () ==> ()
 Run () == (
-	while not (isFinished() 
- 
- 	)
- 	do
- 	(CreateSignal();
-   -- step rest of model
-   
-   
-   
-   World`timerRef.StepTime();
+	while not (isFinished()) do
+ 	(
+ 		CreateSignal();
+   	World`timerRef.StepTime();
   );
 );
 
@@ -105,10 +87,7 @@ CreateSignal() ==
     			    			
     			CM`waterTankController.tankTempSensor.Step();
     			CM`waterTankController.tankLevelSensor.Step();
-    			
-    			
-    		--	CM`waterTankController.FillTank();
-    			
+    			    			
     			
     			
     			if CM`waterTankController.tankTempSensor.ReadValue() > maxWaterTankTemp
@@ -162,28 +141,21 @@ CreateSignal() ==
 
 
 public 
-handleEvent : Order * nat * Time ==> ()
+handleEvent: Order * nat * Time ==> ()
 handleEvent(o,l,t) == outlines := outlines ^ [mk_(o,l,t)]; 
 
 public 
-ShowResult : () ==> ()
+ShowResult: () ==> ()
 ShowResult () ==
-   def - = IO`fwriteval[seq of Outline](outputFile, outlines, <start>) in skip; -- using start to overwrite the content of the output file. Description in IO library file.
+	def - = IO`fwriteval[seq of Outline](outputFile, outlines, <start>) in skip; -- using start to overwrite the content of the output file. Description in IO library file.
 
 public 
-isFinished : () ==> bool
+isFinished: () ==> bool
 isFinished () == return inlines = [] and finished;
 
-
-
-
-
-
-
-
-
-
-
+public 
+Verbose: () ==> bool
+Verbose () == return verbose;
 
 
 --- Coffee ---
@@ -212,15 +184,12 @@ public IncWaterLevel: () ==> nat
 	IncWaterLevel() == (
 		waterLevel := waterLevel + 5;
 		return waterLevel;
-		);
+);
 
 public DecWaterLevel: () ==> nat
 	DecWaterLevel() == (
 		waterLevel := waterLevel - 5;
 		return waterLevel;
-		);
---	pre LevelInv(waterLevel);
-
-
+);
 
 end Environment
