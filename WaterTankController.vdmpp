@@ -26,11 +26,11 @@ operations
 
 public FillTank: () ==> ()
 FillTank() == (   
+	tankLevelSensor.Step();
 	IO`printf("\nFilling water tank to %1s ml", [maxWaterTankLevel]);
 	waterPump.FillTank(maxWaterTankLevel);
-	tankLevelSensor.Step();
 	)
-pre tankLevelSensor.ReadValue() < maxWaterTankLevel
+pre tankLevelSensor.ReadValue() <= maxWaterTankLevel
 post tankLevelSensor.ReadValue() = maxWaterTankLevel;
 
 public EmptyTank: () ==> ()

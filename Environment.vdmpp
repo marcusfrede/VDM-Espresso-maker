@@ -49,6 +49,7 @@ Environment: seq of char * seq of char ==> Environment
 
 
       CM`grinder.FillGrinder(b);
+      IO`printf("\nRemaining bean weight: %1s",[CM`grinder.RemaingBeanWeight()]);
       CM`cupController.FillCups(20,20,20);
       
       IO`print("\n--- System booted successfully ---\n");
@@ -103,7 +104,7 @@ CreateSignal() ==
     			CM`waterTankController.tankLevelSensor.Step();
     			
     			
-    			CM`waterTankController.FillTank();
+    		--	CM`waterTankController.FillTank();
     			
     			
     			
@@ -148,7 +149,7 @@ CreateSignal() ==
 
 	      IO`printf("\nRemaining water level: %1s",[waterLevel]);
 	      IO`printf("\nCurrent water temperature: %1s",[waterTemp]);
-		    IO`printf("\nRemaining beans: %1s",[CM`grinder.RemaingBeanWeight()]);
+		    IO`printf("\nRemaining bean weight: %1s",[CM`grinder.RemaingBeanWeight()]);
 	 		  IO`printf("\nRemaining cups: %1s %2s %3s", CM`cupController.RemainingCups());
 	 
       	IO`print("\n--- System terminated ---\n");

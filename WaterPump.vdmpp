@@ -16,11 +16,11 @@ public WaterOut: () ==> nat
 
 public FillTank: nat1 ==> ()
 	FillTank(up) == ( 
-			if World`env.IncWaterLevel() < up
+			if World`env.IncWaterLevel() < up 
 	  	then FillTank(up)
 	  	else return;
 	)
-post World`env.GetWaterLevel() = up;
+post (World`env.GetWaterLevel() - 1) = up;
 
 public EmptyTank: () ==> ()
 	EmptyTank() == 

@@ -68,6 +68,7 @@ CupAwailable(cs) ==
 	return
 		cases cs:
 			<Small>  -> len cupsSm > 0,
+			<Single> -> len cupsSm > 0,
 			<Medium> -> len cupsMd > 0,
 			<Large>  -> len cupsLg > 0
 		end;

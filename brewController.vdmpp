@@ -1,6 +1,27 @@
 class BrewController is subclass of GLOBAL
 
+instance variables 
+
+private amount : Amount := {mk_ (<Single>, <Espresso>)  |-> mk_Recipe(15 , 7),	mk_ (<Medium>, <Espresso>)  |-> mk_Recipe(30, 14), 	mk_ (<Large>, <Espresso>)  |-> mk_Recipe(60, 21),
+													  mk_ (<Small>, <Americano>) |-> mk_Recipe(150, 7), mk_ (<Medium>, <Americano>) |-> mk_Recipe(300, 14), mk_ (<Large>, <Americano>) |-> mk_Recipe(600, 21),
+													  mk_ (<Small>, <Latte>)     |-> mk_Recipe(150, 7), mk_ (<Medium>, <Latte>)  		|-> mk_Recipe(300, 14), mk_ (<Large>, <Latte>)     |-> mk_Recipe(600, 21)};
+													 
 operations
+
+public AmountTable: Order ==> [Recipe]
+AmountTable(o) == (
+	
+	if o in set dom amount 
+	then return amount(o)
+	else ( /* TODO Dette passer fint på kravet om at ordre ikke må være ugyldige kombinationer */
+		IO`printf("\n\n*** The order %1s %2s is invalid ***", [o.#1, o.#2]);
+		IO`print("\n*** The order is cancelled ***");
+		return nil;
+		--CM`stateController.ErrorOccurred();
+	)
+	
+);
+
 
 pure BrewInv: () ==> bool
 BrewInv() ==
@@ -12,7 +33,9 @@ BrewError() ==
 
 public Start : Order ==> ()
 Start(o) == (
-	dcl rec : Recipe := AmountTable(o);
+	dcl rec : [Recipe] := AmountTable(o);	
+	if rec = nil then return;
+	
 	if BrewError() then return;
 	CM`grinder.Grind(rec.coffee);
 	if BrewError() then return;
@@ -22,3 +45,4 @@ Start(o) == (
 );
 
 end BrewController
+
