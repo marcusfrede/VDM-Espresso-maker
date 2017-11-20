@@ -13,6 +13,8 @@ private outlines : seq of Outline := [];
 private	outputFile : seq of char := "";
 private finished : bool := false;
 
+public verbose : bool := false;
+
 types
 
 public Inline	= Order * Time;
@@ -33,10 +35,11 @@ public
 Environment: seq of char * seq of char ==> Environment
   Environment(fileIn, fileOut) ==
 --   (def mk_ (-,mk_(t,b,input)) = IO`freadval[nat * nat * seq of Inline](fileIn) 
-   (def mk_ (-,mk_(t,l,b,input)) = IO`freadval[nat * nat * nat * seq of Inline](fileIn) 
+   (def mk_ (-,mk_(v,t,l,b,input)) = IO`freadval[bool * nat * nat * nat * seq of Inline](fileIn) 
     in
      (inlines := input;
 
+			verbose := v;
 			waterTemp := t;
 			waterLevel := l;
 			

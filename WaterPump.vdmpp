@@ -17,7 +17,7 @@ public WaterIn: () ==> ()
 	  let ol = World`env.GetWaterLevel(),
 		    nl = World`env.IncWaterLevel()
 		in    	
-			IO`printf("\nIncremented water level from %1s to %2s", [ol,nl]);
+		if World`env.verbose then	IO`printf("\nIncremented water level from %1s to %2s", [ol,nl]);
 );
 
 public WaterOut: () ==> ()
@@ -25,7 +25,7 @@ public WaterOut: () ==> ()
 	  let ol = World`env.GetWaterLevel(),
 				nl = World`env.DecWaterLevel()
 		in		
-			IO`printf("\nDecremented water level from %1s to %2s", [ol,nl]);
+		if World`env.verbose then	IO`printf("\nDecremented water level from %1s to %2s", [ol,nl]);
 );
 
 end WaterPump

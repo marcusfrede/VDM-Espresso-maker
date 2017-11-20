@@ -19,7 +19,7 @@ public Step: () ==> ()
 		let ot = World`env.ReadTemp(),
 		    nt = World`env.IncTemp()
 		in    	
-			IO`printf("\nIncremented temperature from %1s to %2s", [ot,nt]);		
+		if World`env.verbose then	IO`printf("\nIncremented temperature from %1s to %2s", [ot,nt]);		
 )
 --post World`env.ReadTemp() = World`env.ReadTemp() + 1
 
