@@ -8,8 +8,7 @@ operations
 
 public
 ErrorOccurred: () ==> ()
-ErrorOccurred() == 
-	state := <Error>;
+ErrorOccurred() == state := <Error>;
 
 pure public
 GetState: () ==> State

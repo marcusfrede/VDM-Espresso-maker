@@ -4,7 +4,7 @@ types
 
 public Bean :: id : nat
 							 weight : nat1;
-							
+							 							
 instance variables
 
 beans : set of Bean := {};

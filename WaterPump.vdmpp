@@ -1,4 +1,4 @@
-class WaterPump
+class WaterPump 
 
 functions 
 
@@ -19,15 +19,16 @@ public FillTank: nat1 ==> ()
 			if World`env.IncWaterLevel() < up 
 	  	then FillTank(up)
 	  	else return;
-	)
-post (World`env.GetWaterLevel() - 1) = up;
+	);
+--post (World`env.GetWaterLevel() - 1) = up;
 
 public EmptyTank: () ==> ()
 	EmptyTank() == 
 		if World`env.DecWaterLevel() > 0 
 		then EmptyTank()
 		else return;
-	 
+	
+
 --measure Empty;
 
 Empty: () ==> nat
