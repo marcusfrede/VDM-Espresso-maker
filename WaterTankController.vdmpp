@@ -10,7 +10,7 @@ public tankLevelSensor 	: LevelSensor := new LevelSensor(1, <LEVELSENSOR>);
 
 heatingElement 		: HeatingElement := new HeatingElement(1);
 coolingElement 		: CoolingElement := new CoolingElement(1);
-waterPump					: WaterPump := new WaterPump();
+waterPump 				: WaterPump 		 := new WaterPump(1);
 
 functions
  
@@ -28,20 +28,20 @@ operations
 
 public FillTank: () ==> ()
 FillTank() == (   
-	--tankLevelSensor.Step();
 	IO`printf("\nFilling water tank to %1s ml", [maxWaterTankLevel]);
-	waterPump.FillTank(maxWaterTankLevel);
-	)
+	DoFillTank();
+)
 pre tankLevelSensor.ReadValue() < maxWaterTankLevel
 post tankLevelSensor.ReadValue() = maxWaterTankLevel;
 
 public EmptyTank: () ==> ()
 EmptyTank() == (         
-	waterPump.EmptyTank();
+	DoEmptyTank();
 	IO`print("\nEmptying water tank");
-	)
+)
 pre tankLevelSensor.ReadValue() > minWaterTankLevel
 post tankLevelSensor.ReadValue() = minWaterTankLevel;
+
 
 public HeatWater: () ==> ()
 HeatWater() ==         
@@ -51,12 +51,39 @@ public CoolWater: () ==> ()
 CoolWater() ==         
 	coolingElement.Step();
 
-public TakeWater: nat1 ==> ()
+public TakeWater: nat ==> ()
 TakeWater(w) == (
-	dcl tot : nat := 0;
-	while tot < w do
-	 	tot := tot + waterPump.WaterOut();
-); -- kan laves med recursion!!!
+	if w > 0
+	then (tankLevelSensor.Step();
+				waterPump.WaterOut();
+				TakeWater(w-5);
+			 )
+	else return;
+); 
 
+public WaterLevelCheck: nat1 ==> ()
+WaterLevelCheck(l)==
+	if tankLevelSensor.ReadValue() < l
+	then FillTank();
+
+DoFillTank: () ==> ()
+DoFillTank() == ( 
+	tankLevelSensor.Step();	
+	if tankLevelSensor.ReadValue() < maxWaterTankLevel 
+	then (waterPump.WaterIn(); 
+				DoFillTank()
+			 )
+	else return;
+);
+
+DoEmptyTank: () ==> ()
+DoEmptyTank() == (
+ 	tankLevelSensor.Step();
+	if tankLevelSensor.ReadValue() > minWaterTankLevel
+	then (waterPump.WaterOut(); 
+				DoEmptyTank()
+			 )
+	else return;
+);
 
 end WaterTankController

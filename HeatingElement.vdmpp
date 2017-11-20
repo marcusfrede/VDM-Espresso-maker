@@ -16,9 +16,10 @@ public GetID: () ==> nat
 
 public Step: () ==> ()
 	Step() == (
-		dcl otmp : nat := World`env.ReadTemp();
-		dcl ntmp : nat := World`env.IncTemp();	
-		IO`printf("\nIncremented temperature from %1s to %2s", [otmp,ntmp]);		
+		let ot = World`env.ReadTemp(),
+		    nt = World`env.IncTemp()
+		in    	
+			IO`printf("\nIncremented temperature from %1s to %2s", [ot,nt]);		
 )
 --post World`env.ReadTemp() = World`env.ReadTemp() + 1
 

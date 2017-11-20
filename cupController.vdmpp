@@ -32,12 +32,7 @@ FillCups(small, medium, large) == (
 	maxLgCups  := large;
 	
 	IO`printf("\nFilling cupstack with %1s Small, %2s Medium, %3s Large cups", [small, medium, large]);
-	
 	FillCupStacks(small, medium, large);	
-	--FillCupStacks(small);
-	
---	FillCupStacks2();
-	
 	IO`printf("\nCupstack filled with %1s Small, %2s Medium, %3s Large cups", [len cupsSm, len cupsMd, len cupsLg]);
 );
 
@@ -52,9 +47,9 @@ TakeCup(cs) == (
 	);
 	
 	cases cs:
-		<Small>  -> cupsSm := tl cupsSm,
-		<Medium> -> cupsMd := tl cupsMd,
-		<Large>  -> cupsLg := tl cupsLg
+		<Small>,  <Single> -> cupsSm := tl cupsSm,
+		<Medium>, <Double> -> cupsMd := tl cupsMd,
+		<Large>,  <Triple> -> cupsLg := tl cupsLg
 	end;
 	
 );
@@ -67,10 +62,9 @@ public CupAwailable: CupSize ==> bool
 CupAwailable(cs) == 
 	return
 		cases cs:
-			<Small>  -> len cupsSm > 0,
-			<Single> -> len cupsSm > 0,
-			<Medium> -> len cupsMd > 0,
-			<Large>  -> len cupsLg > 0
+			<Small>,  <Single> -> len cupsSm > 0,
+			<Medium>, <Double> -> len cupsMd > 0,
+			<Large>,  <Triple> -> len cupsLg > 0
 		end;
 
 	
@@ -88,8 +82,7 @@ FillCupStackSmall(n) ==
 		cupsSm := cupsSm ^ [mk_Cup(<Small>,false)]; 
 		FillCupStackSmall(n);)
 		else return;
-		
-		
+			
 private FillCupStackMedium: nat ==> ()
 FillCupStackMedium(n) ==
 	if len cupsMd < n

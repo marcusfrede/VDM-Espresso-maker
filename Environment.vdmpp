@@ -207,13 +207,13 @@ pure public GetWaterLevel: () ==> nat
 
 public IncWaterLevel: () ==> nat
 	IncWaterLevel() == (
-		waterLevel := waterLevel + 1;
+		waterLevel := waterLevel + 5;
 		return waterLevel;
 		);
 
 public DecWaterLevel: () ==> nat
 	DecWaterLevel() == (
-		waterLevel := waterLevel - 1;
+		waterLevel := waterLevel - 5;
 		return waterLevel;
 		);
 --	pre LevelInv(waterLevel);

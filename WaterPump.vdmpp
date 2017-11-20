@@ -1,41 +1,31 @@
 class WaterPump 
 
-functions 
+instance variables
+protected ID : nat;
+operations
 
+public WaterPump: nat ==> WaterPump
+	WaterPump (id) ==
+		ID := id;
 
-operations 
-/*
+public GetID: () ==> nat
+	GetID() ==
+		return ID;
+
 public WaterIn: () ==> ()
-	WaterIn() ==
-		World`env.IncWaterLevel();
-	*/
-	
-public WaterOut: () ==> nat
-	WaterOut() ==
-		World`env.DecWaterLevel();
+	WaterIn() == (
+	  let ol = World`env.GetWaterLevel(),
+		    nl = World`env.IncWaterLevel()
+		in    	
+			IO`printf("\nIncremented water level from %1s to %2s", [ol,nl]);
+);
 
-public FillTank: nat1 ==> ()
-	FillTank(up) == ( 
-			if World`env.IncWaterLevel() < up 
-	  	then FillTank(up)
-	  	else return;
-	);
---post (World`env.GetWaterLevel() - 1) = up;
-
-public EmptyTank: () ==> ()
-	EmptyTank() == 
-		if World`env.DecWaterLevel() > 0 
-		then EmptyTank()
-		else return;
-	
-
---measure Empty;
-
-Empty: () ==> nat
-Empty() ==
-World`env.GetWaterLevel();			          	       	  	
-
-
-
+public WaterOut: () ==> ()
+	WaterOut() == (
+	  let ol = World`env.GetWaterLevel(),
+				nl = World`env.DecWaterLevel()
+		in		
+			IO`printf("\nDecremented water level from %1s to %2s", [ol,nl]);
+);
 
 end WaterPump
