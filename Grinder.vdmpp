@@ -4,11 +4,46 @@ types
 
 public Bean :: id : nat
 							 weight : nat1;
+
+public Weight = nat;	
+
+public Bag = map Weight to nat1;
+
+-- 1 er de 3 vægte(1,2,3). 2 svarer til mængden af bønner svarende til den vægt.
 							 							
 instance variables
 
 beans : set of Bean := {};
 sbeans : seq of Bean := [];
+
+bb : Bag := {1 |-> 10, 2 |-> 5, 3 |-> 3};
+
+
+functions
+
+mselect: Bag * nat -> nat
+mselect(-, weight) == weight;
+
+Remove : Bag * nat -> Bag
+Remove (b, e) ==
+  if e in set dom b
+  then if b(e) = 1
+       then {e} <-: b
+       else b ++ {e |-> b(e) - 1}
+  else b;
+
+
+public
+Select: Bag * Weight -> Bag
+Select(bag,weigth) ==
+  if weigth = 0
+  then {|->}
+  else let b in set dom bag be st weigth = b or forall b1 in set dom bag & b >= b1
+       in
+         Select(Remove(bag,b), weigth - b)
+
+measure mselect;
+
 
 operations
 
@@ -29,8 +64,11 @@ Grinder(noOfBeans) == (
 public FillGrinder: nat1 ==> ()
 FillGrinder(upper) == (
 	IO`printf("\nFilling Grinder with %1s beans", [upper]);
+	
 	beans := {mk_Bean(x,(MATH`rand(3) mod 3 + 1)) | x in set{1,...,upper}};
-	sbeans := [mk_Bean(x,(MATH`rand(3) mod 3 + 1)) | x in set{1,...,upper}];
+	
+--	beans := {mk_Bean(x,(MATH`rand(3) mod 3 + 1)) | x in set{1,...,upper}};
+--	sbeans := [mk_Bean(x,(MATH`rand(3) mod 3 + 1)) | x in set{1,...,upper}];
 )
 pre upper <= 500
 post card beans <= 500;
@@ -38,6 +76,12 @@ post card beans <= 500;
 
 public Grind: nat1 ==> ()
 Grind(w) == (
+	let e = Select(bb,w)
+	in
+		IO`print("");
+		
+	IO`print("");
+/*
 	dcl tot : nat := 0;
 	dcl gri : set of Bean := {};
 	for all s in set beans do
@@ -46,6 +90,7 @@ Grind(w) == (
 				gri := gri union {s});
 	
 	beans := beans \ gri;
+*/	
 )
 pre EnoughBeans(w); -- what if out off beans? error message!!!
 
