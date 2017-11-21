@@ -43,7 +43,7 @@ Environment: seq of char * seq of char ==> Environment
       IO`print("\n--- Booting system ---");
       IO`printf("\nInitial water level: %1s",[waterLevel]);
       IO`printf("\nInitial water temperature: %1s",[waterTemp]);
-      CM`grinder.FillGrinder(b);
+      CM`grinder.FillGrinder();
       IO`printf("\nRemaining bean weight: %1s",[CM`grinder.RemaingBeanWeight()]);
       CM`cupController.FillCups(20,20,20);   
       IO`print("\n--- System booted successfully ---\n");        

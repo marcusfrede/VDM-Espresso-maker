@@ -5,9 +5,9 @@ types
 public Bean :: id : nat
 							 weight : nat1;
 
-public Weight = nat;	
+--public Weight = nat;	
 
-public Bag = map Weight to nat1;
+public Bag = map nat1 to nat1;
 
 -- 1 er de 3 vægte(1,2,3). 2 svarer til mængden af bønner svarende til den vægt.
 							 							
@@ -34,44 +34,48 @@ Remove (b, e) ==
 
 
 public
-Select: Bag * Weight -> Bag
+Select: Bag * nat -> Bag
 Select(bag,weigth) ==
   if weigth = 0
   then {|->}
   else let b in set dom bag be st weigth = b or forall b1 in set dom bag & b >= b1
-       in
-         Select(Remove(bag,b), weigth - b)
+       in 
+         Select(Remove(bag,b), (weigth - b) mod weigth);
+--measure mselect;
 
-measure mselect;
+
+Count : Bag * nat -> nat
+Count (b, w) ==
+  if w in set dom b
+  then w * b(w)
+  else 0;
+
+public CalculateWeight: Bag -> nat
+CalculateWeight(b) ==
+	let x = Count(b,1),
+			y = Count(b,2), 
+			z = Count(b,3)
+	in 
+		x + y + z;
+
+
+
 
 
 operations
 
-public CalculateWeight: set of Bean ==> nat
-CalculateWeight(sb) == (
-	dcl tot : nat := 0; 
-	for all s in set sb do
-		tot := tot + s.weight;
-	
-	return tot;
-);
 
-public Grinder: nat ==> Grinder
-Grinder(noOfBeans) == (
-	FillGrinder(noOfBeans);
+public FillGrinder: () ==> ()
+FillGrinder() == (
+	IO`print("\nFilling Grinder with beans");
+	
+--	bb := {x|-> MATH`rand(20) mod 20 + 10 | x in set{1,...,3}};
+	
+	
+	IO`printf("\nGrinder filled with beans %1s %2s %3s", [bb(1), bb(2), bb(3)]);
 );
-
-public FillGrinder: nat1 ==> ()
-FillGrinder(upper) == (
-	IO`printf("\nFilling Grinder with %1s beans", [upper]);
-	
-	beans := {mk_Bean(x,(MATH`rand(3) mod 3 + 1)) | x in set{1,...,upper}};
-	
---	beans := {mk_Bean(x,(MATH`rand(3) mod 3 + 1)) | x in set{1,...,upper}};
---	sbeans := [mk_Bean(x,(MATH`rand(3) mod 3 + 1)) | x in set{1,...,upper}];
-)
-pre upper <= 500
-post card beans <= 500;
+--pre upper <= 500
+--post card beans <= 500;
 
 
 public Grind: nat1 ==> ()
@@ -81,58 +85,22 @@ Grind(w) == (
 		IO`print("");
 		
 	IO`print("");
-/*
-	dcl tot : nat := 0;
-	dcl gri : set of Bean := {};
-	for all s in set beans do
-	if tot <= w
-	then (tot := tot + s.weight; 
-				gri := gri union {s});
-	
-	beans := beans \ gri;
-*/	
+
 )
 pre EnoughBeans(w); -- what if out off beans? error message!!!
 
-/*
-public Grind2: int ==> ()
-Grind2(w) == (	
-	if w > 0 then (
-		sbeans := tl sbeans;
-		Grind2(w - (hd sbeans).weight);)
-);
-*/
-/*
-public Grind4: nat1 ==> ()
-Grind4(w) == (
- dcl tmp : set of Bean := {};
-	tmp := {x | x in set beans & CalculateWeight({x}) < w };
-	beans := beans \ tmp;
-);	
-	
-public Grind2: nat1 ==> ()	-- slow grind is faster
-Grind2(w) == (
-	dcl tot : nat := 0; 
-	for all s in set beans do
-	if tot <= w
-	then (tot := tot + s.weight; 
-				beans := beans \ {s});
-)
-pre EnoughBeans(w); -- what if out off beans? error message!!!
-*/
+
 pure EnoughBeans: nat1 ==> bool
 EnoughBeans(w) == 
-	return w <= RemaingBeanWeight();
+	return w <= CalculateWeight(bb);
+
 
 
 pure public
 RemaingBeanWeight: () ==> nat
 RemaingBeanWeight() == (
-	dcl tot : nat := 0; 
-	for all s in set beans do
-		tot := tot + s.weight;
-	
-	return tot;
+ return CalculateWeight(bb)
 );
+
 
 end Grinder
