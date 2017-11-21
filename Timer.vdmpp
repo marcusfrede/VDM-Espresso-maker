@@ -17,6 +17,9 @@ GetInstance() ==
 
 public StepTime : () ==> ()
 StepTime() == (
+		CM`waterTankController.tankLevelSensor.Step();	
+		CM`waterTankController.tankTempSensor.Step();	
+
 	currentTime := currentTime + stepLength;
   if World`env.Verbose() then	IO`printf("\nSTEP %1s", [currentTime]);	
 );

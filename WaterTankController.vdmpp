@@ -31,16 +31,16 @@ FillTank() == (
 	IO`printf("\nFilling water tank to %1s ml", [maxWaterTankLevel]);
 	DoFillTank();
 )
-pre tankLevelSensor.ReadValue() < maxWaterTankLevel
-post tankLevelSensor.ReadValue() = maxWaterTankLevel;
+pre tankLevelSensor.ReadValue() < maxWaterTankLevel;
+--post tankLevelSensor.ReadValue() = maxWaterTankLevel;
 
 public EmptyTank: () ==> ()
 EmptyTank() == (         
 	DoEmptyTank();
 	IO`print("\nEmptying water tank");
 )
-pre tankLevelSensor.ReadValue() > minWaterTankLevel
-post tankLevelSensor.ReadValue() = minWaterTankLevel;
+pre tankLevelSensor.ReadValue() > minWaterTankLevel;
+--post tankLevelSensor.ReadValue() = minWaterTankLevel;
 
 
 public HeatWater: () ==> ()
@@ -55,11 +55,11 @@ public TakeWater: nat ==> ()
 TakeWater(w) == (
 	if w > 0
 	then (tankLevelSensor.Step();
-				waterPump.WaterOut();
+				let x = waterPump.WaterOut() in
 				TakeWater(w-5);
 			 )
 	else return;
-); 
+);
 
 public WaterLevelCheck: nat1 ==> ()
 WaterLevelCheck(l)==
@@ -67,23 +67,18 @@ WaterLevelCheck(l)==
 	then FillTank();
 
 DoFillTank: () ==> ()
-DoFillTank() == ( 
-	tankLevelSensor.Step();	
-	if tankLevelSensor.ReadValue() < maxWaterTankLevel 
-	then (waterPump.WaterIn(); 
-				DoFillTank()
-			 )
+DoFillTank() == 
+	if waterPump.WaterIn() < maxWaterTankLevel 
+	then DoFillTank()		
 	else return;
-);
+
 
 DoEmptyTank: () ==> ()
-DoEmptyTank() == (
- 	tankLevelSensor.Step();
-	if tankLevelSensor.ReadValue() > minWaterTankLevel
-	then (waterPump.WaterOut(); 
-				DoEmptyTank()
-			 )
+DoEmptyTank() == 
+	if waterPump.WaterOut() > minWaterTankLevel
+	then DoEmptyTank()
 	else return;
-);
+
+
 
 end WaterTankController

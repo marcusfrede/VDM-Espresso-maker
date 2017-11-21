@@ -13,4 +13,5 @@ env := new Environment("scenario.txt", "output.txt");
 
 public Run: () ==> ()
 Run() == (env.Run(); env.ShowResult());
+
 end World

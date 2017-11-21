@@ -12,20 +12,24 @@ public GetID: () ==> nat
 	GetID() ==
 		return ID;
 
-public WaterIn: () ==> ()
+public WaterIn: () ==> nat
 	WaterIn() == (
 	  let ol = World`env.GetWaterLevel(),
 		    nl = World`env.IncWaterLevel()
-		in    	
-		if World`env.Verbose() then	IO`printf("\nIncremented water level from %1s to %2s", [ol,nl]);
+		in (   	
+			if World`env.Verbose() then	IO`printf("\nIncremented water level from %1s to %2s", [ol,nl]);
+			return nl
+		)
 );
 
-public WaterOut: () ==> ()
+public WaterOut: () ==> nat
 	WaterOut() == (
 	  let ol = World`env.GetWaterLevel(),
 				nl = World`env.DecWaterLevel()
-		in		
-		if World`env.Verbose() then	IO`printf("\nDecremented water level from %1s to %2s", [ol,nl]);
+		in (	
+			if World`env.Verbose() then	IO`printf("\nDecremented water level from %1s to %2s", [ol,nl]);
+			return nl
+		)
 );
 
 end WaterPump
