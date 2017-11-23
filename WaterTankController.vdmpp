@@ -63,8 +63,8 @@ TakeWater(w) == (
 
 public WaterLevelCheck: nat1 ==> ()
 WaterLevelCheck(l)==
-	if tankLevelSensor.ReadValue() < l
-	then FillTank();
+	if l < maxWaterTankLevel 
+	then let x = waterPump.WaterIn() in IO`print("");
 
 DoFillTank: () ==> ()
 DoFillTank() == 

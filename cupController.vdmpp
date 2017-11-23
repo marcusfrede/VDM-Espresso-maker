@@ -1,20 +1,20 @@
 class CupController is subclass of GLOBAL
 
 types
-public Cup :: volume : CupSize
-							filled : bool;
-							
-							
+public Cup :: volume : CupSize;
+												
 instance variables
-cupsSm : seq of Cup := [];
-cupsMd : seq of Cup := [];
-cupsLg : seq of Cup := [];
-maxSmCups  : nat := 0;
-maxMdCups  : nat := 0;
-maxLgCups  : nat := 0;
-inv CupSizeInv(cupsSm, maxSmCups);
-inv CupSizeInv(cupsMd, maxMdCups);
-inv CupSizeInv(cupsLg, maxLgCups);
+
+cups : map CupSize to seq of Cup := {<Small>|->[], <Medium>|->[], <Large>|->[]};
+
+-- Hov her kunne da lige være en invariant der kiggede på om der var en forkert kop i det forkerte set.
+-- Det kunne evt ske ved at der blev kigget på rng og dom passser sammen og at rng = 1 eller noget. 
+
+maxCups  : nat := 0;
+
+--inv CupSizeInv(cups, maxSmCups);
+--inv CupSizeInv(cupsMd, maxMdCups);
+--inv CupSizeInv(cupsLg, maxLgCups);
 
 
 functions
@@ -27,13 +27,11 @@ operations
 public FillCups: nat * nat * nat ==> ()
 FillCups(small, medium, large) == (
 	
-	maxSmCups  := small;
-	maxMdCups  := medium;
-	maxLgCups  := large;
+	maxCups  := small;
 	
 	IO`printf("\nFilling cupstack with %1s Small, %2s Medium, %3s Large cups", [small, medium, large]);
-	FillCupStacks(small, medium, large);	
-	IO`printf("\nCupstack filled with %1s Small, %2s Medium, %3s Large cups", [len cupsSm, len cupsMd, len cupsLg]);
+	FillCupStacks(small);	
+	IO`printf("\nCupstack filled with %1s Small, %2s Medium, %3s Large cups", [small, small, small]);
 );
 
 public TakeCup: CupSize ==> ()
@@ -47,64 +45,39 @@ TakeCup(cs) == (
 	);
 	
 	cases cs:
-		<Small>,  <Single> -> cupsSm := tl cupsSm,
-		<Medium>, <Double> -> cupsMd := tl cupsMd,
-		<Large>,  <Triple> -> cupsLg := tl cupsLg
+		<Small>,  <Single> -> cups(<Small>) := tl cups(<Small>),
+		<Medium>, <Double> -> cups(<Medium>) := tl cups(<Medium>),
+		<Large>,  <Triple> -> cups(<Large>) := tl cups(<Large>)
 	end;
-	
 );
 	
 public RemainingCups: () ==> seq of nat
 RemainingCups() ==
-	return [len cupsSm, len cupsMd, len cupsLg];
+	return [len cups(<Small>), len cups(<Medium>), len cups(<Large>)];
 
 public CupAwailable: CupSize ==> bool
 CupAwailable(cs) == 
 	return
 		cases cs:
-			<Small>,  <Single> -> len cupsSm > 0,
-			<Medium>, <Double> -> len cupsMd > 0,
-			<Large>,  <Triple> -> len cupsLg > 0
+			<Small>,  <Single> -> len cups(<Small>) > 0,
+			<Medium>, <Double> -> len cups(<Medium>) > 0,
+			<Large>,  <Triple> -> len cups(<Large>) > 0
 		end;
 
-	
-private FillCupStacks: nat * nat * nat ==> ()
-FillCupStacks(s,m,l) == (
-	FillCupStackSmall(s);
-	FillCupStackMedium(m);
-	FillCupStackLarge(l);
+private FillCupStacks: nat ==> ()
+FillCupStacks(s) == (
+	FillCupStack(<Small>,s);
+	FillCupStack(<Medium>,s);
+	FillCupStack(<Large>,s);
 );
 
-private FillCupStackSmall: nat ==> ()
-FillCupStackSmall(n) ==
-	if len cupsSm < n
+public FillCupStack: CupSize * nat1 ==> ()
+FillCupStack(c,n) ==
+	if len cups(c) < n
 		then (
-		cupsSm := cupsSm ^ [mk_Cup(<Small>,false)]; 
-		FillCupStackSmall(n);)
+					cups(c) := cups(c) ^ [mk_Cup(c)]; 
+					FillCupStack(c,n);
+				 )
 		else return;
 			
-private FillCupStackMedium: nat ==> ()
-FillCupStackMedium(n) ==
-	if len cupsMd < n
-		then (
-		cupsMd := cupsMd ^ [mk_Cup(<Medium>,false)]; 
-		FillCupStackMedium(n);)
-		else return;
-		
-private FillCupStackLarge: nat ==> ()
-FillCupStackLarge(n) ==
-	if len cupsLg < n
-		then (
-		cupsLg := cupsLg ^ [mk_Cup(<Large>,false)]; 
-		FillCupStackLarge(n);)
-		else return;		
-
-/*
-private FillCupStacks2: () ==> ()
-FillCupStacks2() == (
-		cupsSm := [mk_Cup(<Small>,false) | x in set {1,...,maxSmCups}];
-		cupsMd := [mk_Cup(<Medium>,false) | x in set {1,...,maxSmCups}];
-		cupsLg := [mk_Cup(<Large>,false) | x in set {1,...,maxSmCups}];
-);
-*/
 end CupController

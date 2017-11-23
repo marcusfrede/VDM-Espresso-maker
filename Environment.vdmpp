@@ -96,6 +96,10 @@ CreateSignal() ==
     			if CM`waterTankController.tankTempSensor.ReadValue() < minWaterTankTemp		
     			then ( IO`print("\nWater heating needed!\n"); CM`waterTankController.HeatWater(); return);
     			
+    			if CM`waterTankController.tankLevelSensor.ReadValue() < CM`brewController.AmountTable(order).water
+    			then (CM`waterTankController.WaterLevelCheck(CM`brewController.AmountTable(order).water); return);
+    			 	
+    			
     			if CM`waterTankController.tankTempSensor.ReadValue() <= maxWaterTankTemp and
     				 CM`waterTankController.tankTempSensor.ReadValue() >= minWaterTankTemp and
     				 CM`stateController.GetState() = <Normal>				
