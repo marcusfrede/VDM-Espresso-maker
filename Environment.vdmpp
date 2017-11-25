@@ -1,7 +1,7 @@
 class Environment is subclass of GLOBAL
 
 instance variables
-private waterTemp   : nat := 0;
+private waterTemp  : nat := 0;
 
 private inlines	 : seq of Inline := [];
 private outlines : seq of Outline := [];
@@ -28,11 +28,10 @@ Environment: seq of char * seq of char ==> Environment
      	inlines := input;
 			verbose := v;
 			waterTemp := t;
-			waterLevel := l;
       outputFile := fileOut;
 					   
       IO`print("\n--- Booting system ---");
-      IO`printf("\nInitial water level: %1s",[waterLevel]);
+      IO`printf("\nInitial water level: %1s",[CM`waterTankController.GetWaterLevel()]);
       IO`printf("\nInitial water temperature: %1s",[waterTemp]);
       CM`grinder.FillGrinder();
       IO`printf("\nRemaining bean weight: %1s",[CM`grinder.RemaingBeanWeight()]);
@@ -48,8 +47,7 @@ Run () == (
 	while not (isFinished() and 
 	CM`stateController.GetState() <> <Error>) do
  	(
- 	 -- CM`waterTankController.tankTempSensor.Step();
-   -- CM`waterTankController.waterPump.LevelSensor.Step();
+ 	  CM`waterTankController.UpdateSensors();
  		CreateSignal();
    	World`timerRef.StepTime();
   );
@@ -84,8 +82,8 @@ CreateSignal() ==
 		    	then return;		
     			
     			
-    			if CM`waterTankController.tankTempSensor.ReadValue() <= maxWaterTankTemp and
-    				 CM`waterTankController.tankTempSensor.ReadValue() >= minWaterTankTemp and
+    			if CM`waterTankController.GetWaterTemp() <= maxWaterTankTemp and
+    				 CM`waterTankController.GetWaterTemp() >= minWaterTankTemp and
     				 CM`stateController.GetState() = <Normal>				
     			then
     			(
@@ -119,7 +117,7 @@ CreateSignal() ==
   
         IO`print("\n\n--- Shutdown report ---");
 
-	      IO`printf("\nRemaining water level: %1s",[waterLevel]);
+	      IO`printf("\nRemaining water level: %1s",[CM`waterTankController.GetWaterLevel()]);
 	      IO`printf("\nCurrent water temperature: %1s",[waterTemp]);
 		    IO`printf("\nRemaining bean weight: %1s",[CM`grinder.RemaingBeanWeight()]);
 	 		  IO`printf("\nRemaining cups: %1s %2s %3s", CM`cupController.RemainingCups());
@@ -165,6 +163,5 @@ public DecTemp: () ==> nat
 		waterTemp := waterTemp - 1;
 		return waterTemp;
 );
-
 
 end Environment
