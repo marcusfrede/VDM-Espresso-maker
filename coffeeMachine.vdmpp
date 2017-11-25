@@ -8,6 +8,7 @@ public static waterTankController : WaterTankController := new WaterTankControll
 public static grinder						  : Grinder := new Grinder();
 public static stateController	    : StateController := new StateController();
 
-motionSensor			  : seq of MotionSensor := [];
+-- This part can be extended with concurrency
+private static MotionDetector		  : MotionDetector := new MotionDetector();
 	 
 end CM

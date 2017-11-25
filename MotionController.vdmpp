@@ -1,17 +1,3 @@
-class MotionSensor is subclass of Sensor
+class MotionDetector
 
-operations
-
-public MotionSensor: nat * nat ==> MotionSensor
-	MotionSensor (id, val) ==
-		(ID := id;
-		Value := val;
-		);
-
-public Step: () ==> ()
-	Step() ==
-		(Value := World`env.ReadTemp();
-		);
-
-
-end MotionSensor
+end MotionDetector

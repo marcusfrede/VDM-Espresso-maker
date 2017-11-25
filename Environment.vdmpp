@@ -1,10 +1,7 @@
 class Environment is subclass of GLOBAL
 
 instance variables
-
 private waterTemp   : nat := 0;
-private waterLevel  : nat := 0;
-inv LevelInv(waterLevel);
 
 private inlines	 : seq of Inline := [];
 private outlines : seq of Outline := [];
@@ -16,12 +13,6 @@ types
 
 private Inline	= Order * Time;
 private Outline = Order * nat * nat;  
-
-functions
-
-LevelInv: nat -> bool
-LevelInv(lvl) == 
-	lvl >= 0;
 
 operations
 
@@ -54,8 +45,11 @@ Environment: seq of char * seq of char ==> Environment
 public 
 Run: () ==> ()
 Run () == (
-	while not (isFinished()) do
+	while not (isFinished() and 
+	CM`stateController.GetState() <> <Error>) do
  	(
+ 	 -- CM`waterTankController.tankTempSensor.Step();
+   -- CM`waterTankController.waterPump.LevelSensor.Step();
  		CreateSignal();
    	World`timerRef.StepTime();
   );
@@ -80,25 +74,15 @@ CreateSignal() ==
     			if CM`stateController.GetState() = <Error>
     			then 
     			(
-			      IO`print("\n\n\n*** System error occurred ***\n*** Please call maintenace staff ***\n");
+			      IO`print("\n\n\n*** System error occurred ***\n*** Please contact maintenace staff ***\n");
 			      inlines := [];
 			      return;
     			);
     			    			
-    			CM`waterTankController.tankTempSensor.Step();
-    			CM`waterTankController.tankLevelSensor.Step();
-    			    			
+
+		    	if not CM`waterTankController.CheckWater(RecipeLookup(order).water)
+		    	then return;		
     			
-    			
-    			if CM`waterTankController.tankTempSensor.ReadValue() > maxWaterTankTemp
-    			then ( IO`print("\nWater cooling needed!\n"); CM`waterTankController.CoolWater(); return);
-    			 			
-    			if CM`waterTankController.tankTempSensor.ReadValue() < minWaterTankTemp		
-    			then ( IO`print("\nWater heating needed!\n"); CM`waterTankController.HeatWater(); return);
-    			
-    			if CM`waterTankController.tankLevelSensor.ReadValue() < CM`brewController.RecipeLookup(order).water
-    			then (CM`waterTankController.WaterLevelCheck(CM`brewController.RecipeLookup(order).water); return);
-    			 	
     			
     			if CM`waterTankController.tankTempSensor.ReadValue() <= maxWaterTankTemp and
     				 CM`waterTankController.tankTempSensor.ReadValue() >= minWaterTankTemp and
@@ -107,8 +91,10 @@ CreateSignal() ==
     			(
     				IO`print("\nWater temperature ok\n");
     			
-						CM`brewController.Start(order);
-	    			
+    				if CM`brewController.CheckStatus(order) = false
+    				then (CM`stateController.ErrorOccurred(); return);
+    				
+						CM`brewController.Start(order);  			
 	          IO`print("\n\nNew env values set");
 	          
 	          IO`print("\nAt time: ");
@@ -121,7 +107,7 @@ CreateSignal() ==
 	          IO`print("\nOrder: ");
 	          IO`print(order.#2);
 	      
-	          handleEvent(order, waterLevel, curtime);
+	         -- handleEvent(order, CM`waterTankController.waterPump.GetWaterLevel(), curtime);
 	          
 	          inlines := tl inlines; -- take tail and assign to inlines
 	          return
@@ -180,20 +166,5 @@ public DecTemp: () ==> nat
 		return waterTemp;
 );
 
-pure public GetWaterLevel: () ==> nat
-	GetWaterLevel() ==
-		return waterLevel;
-
-public IncWaterLevel: () ==> nat
-	IncWaterLevel() == (
-		waterLevel := waterLevel + 5;
-		return waterLevel;
-);
-
-public DecWaterLevel: () ==> nat
-	DecWaterLevel() == (
-		waterLevel := waterLevel - 5;
-		return waterLevel;
-);
 
 end Environment

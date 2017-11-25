@@ -2,11 +2,11 @@ class WaterTankController is subclass of GLOBAL
 
 instance variables
 
+
+
 inv TempInv(tankTempSensor);
-inv LevelInv(tankLevelSensor);
 
 public tankTempSensor 		: TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>);
-public tankLevelSensor 	: LevelSensor := new LevelSensor(1, <LEVELSENSOR>);
 
 heatingElement 		: HeatingElement := new HeatingElement(1);
 coolingElement 		: CoolingElement := new CoolingElement(1);
@@ -19,66 +19,53 @@ TempInv(s) == (
 	s.ReadValue() >= 0 and s.ReadValue() <= 100
 );
 
-LevelInv: LevelSensor -> bool
-LevelInv(s) == (
-	s.ReadValue() >= minWaterTankLevel and s.ReadValue() <= maxWaterTankLevel
-);
-
 operations
-
-public FillTank: () ==> ()
-FillTank() == (   
-	IO`printf("\nFilling water tank to %1s ml", [maxWaterTankLevel]);
-	DoFillTank();
-)
-pre tankLevelSensor.ReadValue() < maxWaterTankLevel;
---post tankLevelSensor.ReadValue() = maxWaterTankLevel;
-
-public EmptyTank: () ==> ()
-EmptyTank() == (         
-	DoEmptyTank();
-	IO`print("\nEmptying water tank");
-)
-pre tankLevelSensor.ReadValue() > minWaterTankLevel;
---post tankLevelSensor.ReadValue() = minWaterTankLevel;
-
-
-public HeatWater: () ==> ()
-HeatWater() ==         
-	heatingElement.Step();
-
-public CoolWater: () ==> ()
-CoolWater() ==         
-	coolingElement.Step();
 
 public TakeWater: nat ==> ()
 TakeWater(w) == (
 	if w > 0
-	then (tankLevelSensor.Step();
-				let x = waterPump.WaterOut() in
+	then (
+				let newLevel = waterPump.DecWaterLevel(waterPump.GetWaterLevel(), w) in
+				IO`printf("\nNew water level %1s\n",[newLevel]); 
 				TakeWater(w-5);
 			 )
 	else return;
 );
 
-public WaterLevelCheck: nat1 ==> ()
-WaterLevelCheck(l)==
-	if l < maxWaterTankLevel 
-	then let x = waterPump.WaterIn() in IO`print("");
+public CheckWater: nat1 ==> bool
+CheckWater(lvl) == ( 			
+	if waterPump.GetWaterLevel() > maxWaterTankTemp
+	then ( 
+				IO`print("\nWater cooling needed!\n");
+				CoolWater(); 
+				return false
+			 );
+	 			
+	if tankTempSensor.ReadValue() < minWaterTankTemp		
+	then ( 
+				IO`print("\nWater heating needed!\n"); 
+				HeatWater(); 
+				return false
+			 );
+	
+	if waterPump.GetWaterLevel() < lvl
+	then (
+				let newLevel = waterPump.IncWaterLevel(waterPump.GetWaterLevel(), lvl) in
+				IO`printf("\nNew water level %1s\n",[newLevel]); 
+				return false
+			 );
+			 
+	return true;
+);
 
-DoFillTank: () ==> ()
-DoFillTank() == 
-	if waterPump.WaterIn() < maxWaterTankLevel 
-	then DoFillTank()		
-	else return;
 
+private HeatWater: () ==> ()
+HeatWater() ==         
+	heatingElement.Step();
 
-DoEmptyTank: () ==> ()
-DoEmptyTank() == 
-	if waterPump.WaterOut() > minWaterTankLevel
-	then DoEmptyTank()
-	else return;
-
+private CoolWater: () ==> ()
+CoolWater() ==         
+	coolingElement.Step();
 
 
 end WaterTankController

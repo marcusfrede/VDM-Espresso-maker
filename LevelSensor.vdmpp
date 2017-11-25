@@ -4,13 +4,10 @@ operations
 
 public LevelSensor: nat * sensorType ==> LevelSensor
 	LevelSensor (id, type) ==
-		(ID := id;
-		Type := type;
-		);
+		(ID := id; Type := type;);
 
 public Step: () ==> ()
 	Step() ==
-		(Value := World`env.GetWaterLevel();
-		);
+		Value := World`env.GetWaterLevel();
 
 end LevelSensor

@@ -4,9 +4,7 @@ operations
 
 public TemperatureSensor: nat * sensorType ==> TemperatureSensor
 	TemperatureSensor (id, type) ==
-		(ID := id;
-		Type := type;
-		);
+		(ID := id; Type := type;);
 
 public Step: () ==> ()
 	Step() == ( 

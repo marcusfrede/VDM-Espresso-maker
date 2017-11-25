@@ -67,12 +67,12 @@ FillCups(small, medium, large) == (
 public TakeCup: CupSize ==> ()
 TakeCup(cs) == (
 
-	if not CupAwailable(cs) then 
-	(
-		IO`printf("We are out of %1s cups", [cs]);
-		CM`stateController.ErrorOccurred();
-		return;
-	);
+	if not CupAwailable(cs) 
+	then 
+			(
+				IO`printf("We are out of %1s cups", [cs]);
+				return;
+			);
 	
 	cups := 
 			cases cs:
@@ -86,7 +86,8 @@ public RemainingCups: () ==> seq of nat
 RemainingCups() ==
 	return [len cups(<Small>), len cups(<Medium>), len cups(<Large>)];
 
-public CupAwailable: CupSize ==> bool
+pure public 
+CupAwailable: CupSize ==> bool
 CupAwailable(cs) == 
 	return
 		cases cs:

@@ -24,4 +24,22 @@ values
 	public minWaterTankLevel = 0;
 	public maxWaterTankLevel = 1000;
 	
+instance variables 
+
+private recipes : Recipes := {mk_ (<Single>, <Espresso>) |-> mk_Recipe(15 , 7),	mk_ (<Double>, <Espresso>)  |-> mk_Recipe(30, 14), 	mk_ (<Triple>, <Espresso>) |-> mk_Recipe(60, 21),
+													  	mk_ (<Small>, <Americano>) |-> mk_Recipe(150, 7), mk_ (<Medium>, <Americano>) |-> mk_Recipe(300, 14), mk_ (<Large>, <Americano>) |-> mk_Recipe(600, 21),
+													  	mk_ (<Small>, <Latte>)     |-> mk_Recipe(150, 7), mk_ (<Medium>, <Latte>)  		|-> mk_Recipe(300, 14), mk_ (<Large>, <Latte>)     |-> mk_Recipe(600, 21)};
+													 
+operations
+
+public RecipeLookup: Order ==> [Recipe]
+RecipeLookup(order) == 
+	if order in set dom recipes 
+	then return recipes(order)
+	else ( /* TODO Dette passer fint på kravet om at ordre ikke må være ugyldige kombinationer */
+		IO`printf("\n\n*** The order %1s %2s is invalid ***", [order.#1, order.#2]);
+		IO`print("\n*** The order is cancelled ***");
+		return nil;
+	);	
+	
 end GLOBAL
