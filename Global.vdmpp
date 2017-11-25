@@ -12,7 +12,7 @@ types
 	public Recipe :: water : mL
 									 coffee : g;  
 										  
-	public Amount = map Order to Recipe;							
+	public Recipes = map Order to Recipe;							
 	
 	public State = <Normal> | <Error>; 
 	-- Time
