@@ -9,6 +9,6 @@ public static grinder						  : Grinder := new Grinder();
 public static stateController	    : StateController := new StateController();
 
 -- This part can be extended with concurrency
-private static MotionDetector		  : MotionDetector := new MotionDetector();
+--private static MotionDetector		  : MotionDetector := new MotionDetector();
 	 
 end CM

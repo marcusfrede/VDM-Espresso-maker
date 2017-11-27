@@ -105,7 +105,7 @@ CreateSignal() ==
 	          IO`print("\nOrder: ");
 	          IO`print(order.#2);
 	      
-	         -- handleEvent(order, CM`waterTankController.waterPump.GetWaterLevel(), curtime);
+	          handleEvent(order, CM`waterTankController.GetWaterLevel(), curtime);
 	          
 	          inlines := tl inlines; -- take tail and assign to inlines
 	          return
