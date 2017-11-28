@@ -6,7 +6,7 @@ Bag = map nat1 to nat1; -- 1 er de 3 vægte(1,2,3). 2 svarer til mængden af bø
 							 							
 instance variables
 
-beans : Bag := {1 |-> 11, 2 |-> 51, 3 |-> 32};
+beans : Bag := {|->};
 
 functions
 
@@ -24,10 +24,11 @@ Select(bag,weigth) ==
   then bag
   else let b in set dom bag be st weigth = b or forall b1 in set dom bag & b >= b1
        in 
-         Select(Remove(bag,b), (weigth - b) mod weigth);
---measure mselect;
+         Select(Remove(bag,b), (weigth - b) mod weigth)        
+measure mselect;
+
 mselect: Bag * nat -> nat
-mselect(-, weight) == weight;
+mselect(b, weight) == CalculateWeight(b) + weight;
 
 Count : Bag * nat -> nat
 Count (b, w) ==

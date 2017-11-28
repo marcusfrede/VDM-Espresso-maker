@@ -21,7 +21,6 @@ operations
 public 
 Environment: seq of char * seq of char ==> Environment
   Environment(fileIn, fileOut) ==
---   (def mk_ (-,mk_(t,b,input)) = IO`freadval[nat * nat * seq of Inline](fileIn) 
    (def mk_ (-,mk_(v,t,l,b,input)) = IO`freadval[bool * nat * nat * nat * seq of Inline](fileIn) 
     in
      (
@@ -34,8 +33,10 @@ Environment: seq of char * seq of char ==> Environment
       IO`printf("\nInitial water level: %1s",[CM`waterTankController.GetWaterLevel()]);
       IO`printf("\nInitial water temperature: %1s",[waterTemp]);
       CM`grinder.FillGrinder();
+  
       IO`printf("\nRemaining bean weight: %1s",[CM`grinder.RemaingBeanWeight()]);
-      CM`cupController.FillCups(20,20,20);   
+      CM`cupController.FillCups(b);   
+  
       IO`print("\n--- System booted successfully ---\n");        
      );
   
@@ -67,8 +68,6 @@ CreateSignal() ==
    	(if time <= curtime
     	then (--SetTemp(temp);
     			
-    			
-    			
     			if CM`stateController.GetState() = <Error>
     			then 
     			(
@@ -76,40 +75,61 @@ CreateSignal() ==
 			      inlines := [];
 			      return;
     			);
+    		
+    		
+    		
+    		
+    		
     			    			
+		    	if not CM`waterTankController.CheckWaterLevel(RecipeLookup(order).water) then return;		    			
+    			if not CM`waterTankController.CheckWaterTemperature() then return;		
+    					
 
-		    	if not CM`waterTankController.CheckWater(RecipeLookup(order).water)
-		    	then return;		
-    			
-    			
-    			if CM`waterTankController.GetWaterTemp() <= maxWaterTankTemp and
-    				 CM`waterTankController.GetWaterTemp() >= minWaterTankTemp and
-    				 CM`stateController.GetState() = <Normal>				
-    			then
-    			(
-    				IO`print("\nWater temperature ok\n");
-    			
-    				if CM`brewController.CheckStatus(order) = false
-    				then (CM`stateController.ErrorOccurred(); return);
-    				
-						CM`brewController.Start(order);  			
-	          IO`print("\n\nNew env values set");
-	          
-	          IO`print("\nAt time: ");
-	          IO`print(time);
-	          IO`print("\ncur time: ");
-	          IO`print(curtime);
-	          
-	          IO`print("\ncupsize: ");
-	          IO`print(order.#1);
-	          IO`print("\nOrder: ");
-	          IO`print(order.#2);
-	      
-	          handleEvent(order, CM`waterTankController.GetWaterLevel(), curtime);
-	          
-	          inlines := tl inlines; -- take tail and assign to inlines
-	          return
-          );
+
+
+
+
+
+  				IO`print("\nWater temperature ok\n");
+  		
+  		
+  		
+  		
+  			
+  				if CM`brewController.CheckStatus(order) = false
+  				then (CM`stateController.ErrorOccurred(); return);
+  				
+					CM`brewController.Start(order);  			
+      
+      
+      
+      
+      
+      
+          IO`print("\n\nNew env values set");
+          
+          IO`print("\nAt time: ");
+          IO`print(time);
+          IO`print("\ncur time: ");
+          IO`print(curtime);
+          
+          IO`print("\ncupsize: ");
+          IO`print(order.#1);
+          IO`print("\nOrder: ");
+          IO`print(order.#2);
+      
+      
+      
+      
+      
+          handleEvent(order, CM`waterTankController.GetWaterLevel(), curtime);
+     
+     
+     
+     
+     
+          
+          inlines := tl inlines; -- take tail and assign to inlines
        );
    	);
   )
@@ -135,7 +155,8 @@ handleEvent(o,l,t) == outlines := outlines ^ [mk_(o,l,t)];
 public 
 ShowResult: () ==> ()
 ShowResult () ==
-	def - = IO`fwriteval[seq of Outline](outputFile, outlines, <start>) in skip; -- using start to overwrite the content of the output file. Description in IO library file.
+	def - = IO`fwriteval[seq of Outline](outputFile, outlines, <start>) in skip; 
+	-- using start to overwrite the content of the output file. Description in IO library file.
 
 public 
 isFinished: () ==> bool

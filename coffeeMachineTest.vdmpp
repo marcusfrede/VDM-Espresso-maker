@@ -1,0 +1,14 @@
+class CMTest is subclass of GLOBAL
+
+operations
+/*
+public Run: () ==> ()
+Run() ==
+let ts : TestSuite = new TestSuite(),
+ 	Testresult = new TestResult()
+	in (
+			ts.addTest(new BrewControllerTest());
+			IO‘println(Testresult.toString());
+		 );
+*/	 
+end CMTest

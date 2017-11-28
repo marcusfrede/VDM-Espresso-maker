@@ -13,12 +13,28 @@ cups : CupBag := {|->};
 
 maxCups  : nat := 0;
 
---inv CupSizeInv(cups, maxSmCups);
+--inv WrongCupInv(cups);
+--inv CupSizeInv(cups, maxCups);
+
+
+
 --inv CupSizeInv(cupsMd, maxMdCups);
 --inv CupSizeInv(cupsLg, maxLgCups);
 
 
 functions
+
+WrongCupInv: CupBag -> bool
+WrongCupInv(cups) ==
+ 	card elems cups(<Small>) = 1 and
+ 	card elems cups(<Medium>) = 1 and
+ 	card elems cups(<Large>) = 1;
+ 	
+CupSizeInv: CupBag * nat -> bool
+CupSizeInv(cups,maxCups) ==
+ 	len	cups(<Small>) <= maxCups and
+ 	len	cups(<Medium>) <= maxCups and
+ 	len	cups(<Large>) <= maxCups; 	
 
 public
 FillCupStack: CupBag * CupSize * nat1 -> CupBag
@@ -26,7 +42,11 @@ FillCupStack(bag, cs, no) ==
 	if cs not in set dom bag or len bag(cs) < no
 	then FillCupStack(Add(bag,cs), cs, no)
 	else bag;
-		
+--measure FillCupMeas;		
+
+--FillCupMeas: CupBag * CupSize * nat1 -> CupBag
+--FillCupMeas(bag, cs, n) == 2;
+
 
 Add : CupBag * CupSize -> CupBag
 Add (bag, cs) ==
@@ -48,19 +68,17 @@ Remove (bag, cs) ==
        else bag ++ {cs |-> tl bag(cs)}
   else bag;
 
-CupSizeInv: seq of Cup * nat -> bool
-CupSizeInv(cups,maxCups) ==
- 	len	cups <= maxCups;
-
 operations
 
-public FillCups: nat * nat * nat ==> ()
-FillCups(small, medium, large) == (
+public FillCups: nat ==> ()
+FillCups(no) == (
 	
-	maxCups  := small;
+	maxCups := no;
 	
-	IO`printf("\nFilling cupstack with %1s Small, %2s Medium, %3s Large cups", [small, medium, large]);
-	FillCupStacks(small);	
+	--beans := {x |-> y | y in set {<Small>, <Medium>, <Large>} };
+	
+	IO`printf("\nFilling cupstack with %1s Small, %2s Medium, %3s Large cups", [no, no, no]);
+	FillCupStacks(no);	
 	IO`printf("\nCupstack filled with %1s Small, %2s Medium, %3s Large cups", RemainingCups());
 );
 

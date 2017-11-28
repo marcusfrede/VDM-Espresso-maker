@@ -8,7 +8,7 @@ private heatingElement 		: HeatingElement := new HeatingElement(1);
 private coolingElement 		: CoolingElement := new CoolingElement(1);
 
 inv LevelInv(waterLevel);
-inv TempInv(tempSensor);
+--inv TempInv(tempSensor);
 
 functions
 
@@ -16,22 +16,31 @@ IncreaseWater: nat * nat -> nat
 IncreaseWater(current, goal) ==
 	if current < goal
 	then IncreaseWater(current+5, goal)
-	else current;
+	else current
+measure IncWater;
+
+IncWater: nat * nat -> nat
+IncWater(c,g) == g - c; 
 
 DecreaseWater: nat * nat -> nat
 DecreaseWater(current, goal) ==
 	if current > goal
 	then DecreaseWater(current-5, goal)
-	else current;
+	else current
+measure DecWater;
+
+DecWater: nat * nat -> nat
+DecWater(c,g) == g + c; 
+
 
 LevelInv: nat -> bool
 LevelInv(lvl) == 
 	lvl >= minWaterTankLevel and lvl <= maxWaterTankLevel;
 
-TempInv: TemperatureSensor -> bool
-TempInv(s) == (
-	s.ReadValue() >= 0 and s.ReadValue() <= 100
-);
+--TempInv: TemperatureSensor -> bool
+--TempInv(s) == (
+--	s.ReadValue() >= 0 and s.ReadValue() <= 100
+--);
 
 operations
 
@@ -75,39 +84,35 @@ TakeWater(w) == (
 	else return;
 );
 
-public CheckWater: nat1 ==> bool
-CheckWater(lvl) == ( 			
+public CheckWaterTemperature: () ==> bool
+CheckWaterTemperature() == ( 			
 	if tempSensor.ReadValue() > maxWaterTankTemp
 	then ( 
 				IO`print("\nWater cooling needed!\n");
-				CoolWater(); 
+				coolingElement.Step(); 
 				return false
 			 );
 	 			
 	if tempSensor.ReadValue() < minWaterTankTemp		
 	then ( 
 				IO`print("\nWater heating needed!\n"); 
-				HeatWater(); 
-				return false
-			 );
-	
-	if waterLevel < lvl
-	then (
-				let newLevel = IncWaterLevel(waterLevel, lvl) in
-				IO`printf("\nIncreasing water level, new is: %1s",[newLevel]); 
+				heatingElement.Step();
 				return false
 			 );
 			 
 	return true;
 );
-
-
-private HeatWater: () ==> ()
-HeatWater() ==         
-	heatingElement.Step();
-
-private CoolWater: () ==> ()
-CoolWater() ==         
-	coolingElement.Step();
+	
+	
+public CheckWaterLevel: nat1 ==> bool
+CheckWaterLevel(lvl) == ( 			
+	if waterLevel < lvl
+	then (
+				let newLevel = IncWaterLevel(waterLevel, lvl) in
+				IO`printf("\nIncreasing water level, new is: %1s",[newLevel]); 
+				return false
+			 )
+	else return true
+);
 
 end WaterTankController

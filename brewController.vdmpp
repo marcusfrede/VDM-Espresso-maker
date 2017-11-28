@@ -15,7 +15,7 @@ CheckStatus(order) ==
 		else return false;	
 
 public Start : Order ==> ()
-Start(order) == (
+Start(order) == 
 	let recipe = RecipeLookup(order) in
 		if recipe = nil 
 		then return
@@ -24,6 +24,6 @@ Start(order) == (
 					CM`cupController.TakeCup(order.#1);
 			    CM`waterTankController.TakeWater(recipe.water);	
 				 )
-);
+
 
 end BrewController

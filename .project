@@ -12,6 +12,10 @@
 					<key>LANGUAGE_VERSION</key>
 					<value>vdm10</value>
 				</dictionary>
+				<dictionary>
+					<key>SUPPRESS_WARNINGS</key>
+					<value>false</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
