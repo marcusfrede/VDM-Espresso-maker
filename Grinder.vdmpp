@@ -47,7 +47,7 @@ public FillGrinder: () ==> ()
 FillGrinder() == (
 	IO`print("\nFilling Grinder with beans");
 	
-	beans := {x|-> MATH`rand(20) mod 20 + 10 | x in set{1,...,3}};
+	beans := {x|-> MATH`rand(30) mod 30 + 25 | x in set{1,...,3}};
 	
 	IO`printf("\nGrinder filled with beans %1s %2s %3s", [beans(1), beans(2), beans(3)]);
 );
@@ -56,8 +56,10 @@ FillGrinder() == (
 
 
 public Grind: nat1 ==> ()
-Grind(weight) ==
-	beans := Select(beans, weight)
+Grind(weight) == (
+	beans := Select(beans, weight);
+	IO`print("\n*** Grinding");
+)
 pre EnoughBeans(weight); -- what if out off beans? error message!!!
 
 

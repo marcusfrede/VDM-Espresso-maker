@@ -8,8 +8,7 @@ public TemperatureSensor: nat * sensorType ==> TemperatureSensor
 
 public Step: () ==> ()
 	Step() == ( 
-		Value := World`env.ReadTemp();
-	  if World`env.Verbose() then	IO`printf("\nCurrent water temperature %1s", [Value]);
+		Value := CM`waterTankController.ReadTemp();
 );
 
 end TemperatureSensor

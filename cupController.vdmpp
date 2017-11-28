@@ -6,7 +6,7 @@ public CupBag = map CupSize to seq of Cup;
 												
 instance variables
 
-cups : CupBag := {|->};
+cups : CupBag := {<Small>|->[], <Medium> |-> [], <Large> |-> []};
 
 -- Hov her kunne da lige være en invariant der kiggede på om der var en forkert kop i det forkerte set.
 -- Det kunne evt ske ved at der blev kigget på rng og dom passser sammen og at rng = 1 eller noget. 
@@ -16,19 +16,13 @@ maxCups  : nat := 0;
 --inv WrongCupInv(cups);
 --inv CupSizeInv(cups, maxCups);
 
-
-
---inv CupSizeInv(cupsMd, maxMdCups);
---inv CupSizeInv(cupsLg, maxLgCups);
-
-
 functions
 
 WrongCupInv: CupBag -> bool
 WrongCupInv(cups) ==
- 	card elems cups(<Small>) = 1 and
- 	card elems cups(<Medium>) = 1 and
- 	card elems cups(<Large>) = 1;
+  Exists(cups, <Small>) and
+	Exists(cups, <Medium>) and
+	Exists(cups, <Large>);
  	
 CupSizeInv: CupBag * nat -> bool
 CupSizeInv(cups,maxCups) ==
@@ -44,10 +38,13 @@ FillCupStack(bag, cs, no) ==
 	else bag;
 --measure FillCupMeas;		
 
---FillCupMeas: CupBag * CupSize * nat1 -> CupBag
---FillCupMeas(bag, cs, n) == 2;
+FillCupMeas: CupBag * CupSize * nat1 -> nat
+FillCupMeas(bag, cs, n) == if cs not in set dom bag then 0 else len bag(cs) + 1;
 
-
+Exists: CupBag * CupSize -> bool
+Exists(bag, cs) ==
+	cs in set dom bag;
+	
 Add : CupBag * CupSize -> CupBag
 Add (bag, cs) ==
   if cs in set dom bag
@@ -72,14 +69,9 @@ operations
 
 public FillCups: nat ==> ()
 FillCups(no) == (
-	
 	maxCups := no;
-	
-	--beans := {x |-> y | y in set {<Small>, <Medium>, <Large>} };
-	
-	IO`printf("\nFilling cupstack with %1s Small, %2s Medium, %3s Large cups", [no, no, no]);
 	FillCupStacks(no);	
-	IO`printf("\nCupstack filled with %1s Small, %2s Medium, %3s Large cups", RemainingCups());
+	PrintRemainingCups();
 );
 
 public TakeCup: CupSize ==> ()
@@ -89,31 +81,36 @@ TakeCup(cs) == (
 	then 
 			(
 				IO`printf("We are out of %1s cups", [cs]);
+				CM`stateController.ErrorOccurred();
 				return;
 			);
 	
 	cups := 
 			cases cs:
-				<Small>,  <Single> -> Remove(cups, <Small>),
+				<Small>,  <Single> -> Remove(cups,<Small>),
 				<Medium>, <Double> -> Remove(cups,<Medium>),
 				<Large>,  <Triple> -> Remove(cups,<Large>)
-			end
+			end;
+	
+		IO`print("\n*** Took cup");
+			
 );
 	
-public RemainingCups: () ==> seq of nat
-RemainingCups() ==
-	return [len cups(<Small>), len cups(<Medium>), len cups(<Large>)];
+public PrintRemainingCups: () ==> ()
+PrintRemainingCups() == 
+	for all c in set dom cups do
+		IO`printf("\nCupstack contains %1s %2s cups", [len cups(c), c]);
 
 pure public 
 CupAwailable: CupSize ==> bool
 CupAwailable(cs) == 
 	return
 		cases cs:
-			<Small>,  <Single> -> len cups(<Small>) > 0,
-			<Medium>, <Double> -> len cups(<Medium>) > 0,
-			<Large>,  <Triple> -> len cups(<Large>) > 0
+			<Small>,  <Single> -> Exists(cups,<Small>)  and len cups(<Small>) > 0,
+			<Medium>, <Double> -> Exists(cups,<Medium>) and len cups(<Medium>) > 0,
+			<Large>,  <Triple> -> Exists(cups,<Large>)  and len cups(<Large>) > 0
 		end;
-
+		
 private FillCupStacks: nat ==> ()
 FillCupStacks(s) == (
 	cups := Append(FillCupStack(cups ,<Small>,s),<Small>);

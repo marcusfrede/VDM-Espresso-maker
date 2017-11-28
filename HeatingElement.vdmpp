@@ -16,8 +16,8 @@ public GetID: () ==> nat
 
 public Step: () ==> ()
 	Step() == (
-		let ot = World`env.ReadTemp(),
-		    nt = World`env.IncTemp()
+		let ot = CM`waterTankController.ReadTemp(),
+		    nt = CM`waterTankController.IncTemp()
 		in    	
 		if World`env.Verbose() then	IO`printf("\nIncremented temperature from %1s to %2s", [ot,nt]);		
 )

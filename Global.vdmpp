@@ -6,11 +6,8 @@ types
 	public DrinkType = <Americano> | <Espresso> | <Latte>; 
 	public Order = CupSize * DrinkType;
 	
-	public mL = nat;
-	public g = nat;
-	
-	public Recipe :: water : mL
-									 coffee : g;  
+	public Recipe :: water : nat1
+									 coffee : nat1;  
 										  
 	public Recipes = map Order to Recipe;							
 	
@@ -38,7 +35,7 @@ RecipeLookup(order) ==
 	then return recipes(order)
 	else ( /* TODO Dette passer fint på kravet om at ordre ikke må være ugyldige kombinationer */
 		IO`printf("\n\n*** The order %1s %2s is invalid ***", [order.#1, order.#2]);
-		IO`print("\n*** The order is cancelled ***");
+		IO`print("\n*** The order is cancelled ***\n");
 		return nil;
 	);	
 	

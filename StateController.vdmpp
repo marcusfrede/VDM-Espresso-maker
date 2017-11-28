@@ -8,7 +8,10 @@ operations
 
 public
 ErrorOccurred: () ==> ()
-ErrorOccurred() == state := <Error>;
+ErrorOccurred() == ( 
+  IO`print("\n\n\n*** System error occurred ***\n*** Please contact maintenace staff ***\n");
+	state := <Error>
+);
 
 pure public
 GetState: () ==> State
