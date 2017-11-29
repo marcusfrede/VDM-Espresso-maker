@@ -43,11 +43,11 @@ CalculateWeight(b) ==
 operations
 
 
-public FillGrinder: () ==> ()
-FillGrinder() == (
+public FillGrinder: nat ==> ()
+FillGrinder(n) == (
 	IO`print("\nFilling Grinder with beans");
 	
-	beans := {x|-> MATH`rand(30) mod 30 + 25 | x in set{1,...,3}};
+	beans := {x|-> MATH`rand(n) mod n + (n-10) | x in set{1,...,3}};
 	
 	IO`printf("\nGrinder filled with beans %1s %2s %3s", [beans(1), beans(2), beans(3)]);
 );

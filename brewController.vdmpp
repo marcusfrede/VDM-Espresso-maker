@@ -4,93 +4,60 @@ instance variables
 
 order : [Order] := nil;
 recipe : [Recipe] := nil; 		
+soldOut : bool := false;
 heatedWater : nat := 0;
-
-status : Status := <Idle>;		
-
-types 
-
-public Status = <Ready> | <Brewing> | <BoilWater> | <Grind> | <TakeCup> | <Done> | <Idle>;
-				 
+	 
 operations
 
-public GetStatus: () ==> Status
-GetStatus() == return status;
+public SoldOut: () ==> bool
+SoldOut() == return soldOut;
 
-public Step: () ==> ()
-Step() ==
-  (
-  	if status <> <Idle> then return; 
-  
-		if not CM`waterTankController.FillWaterTank() then return;		    			
-		if not CM`waterTankController.CorrectWaterTemperature() then return;		
-		
-		IO`print("\nSelf service done\n"); 
-		status := <Ready>;
-  );
-
-public Start : Order ==> ()
-Start(o) == (
-	if status = <Idle> then return; 
-	recipe := RecipeLookup(o);
+public AddOrder: Order ==> ()
+AddOrder(o) == (
 	order := o;
-	if recipe = nil then status := <Done>
-	else 	cases status:
-					<Ready> 		-> Ready(),
-					<Grind> 		-> Grind(),
-					<TakeCup> 	-> TakeCup(),			
-					<BoilWater> -> BoilWater(),
-					<Done>      -> Done()
-				end;			
 );
 
-Done: () ==> ()
-Done() == (
-	IO`print("\n--- Order finished ---");
+public Step: () ==> ()
+Step() == (
+	recipe := RecipeLookup(order);
+
+	if not CheckLevelStatus()
+	then return;
+
+	CM`grinder.Grind(recipe.coffee);
+	CM`cupController.TakeCup(order.#1);	
+	CM`waterTankController.TakeWater(recipe.water);
+	PrintReceipt();
 	
-	IO`print("\ncupsize: ");
+	order := nil;
+	recipe := nil;
+	heatedWater := 0;
+);
+
+PrintReceipt: () ==> ()
+PrintReceipt() == (
+	IO`print("\n\n--- Order finished ---");
+	
+	IO`print("\nCupsize: ");
 	IO`print(order.#1);
 	IO`print("\nOrder: ");
 	IO`print(order.#2);
 	
 	IO`print("\n-- Take your coffee --\n");
-	
-	order := nil;
-	heatedWater := 0;
-	status := <Idle>;
 );
 
-BoilWater: () ==> ()
-BoilWater() == (
-	if heatedWater = recipe.water 
-	then status := <Done>
-	else heatedWater := heatedWater + CM`waterTankController.TakeWater();
+CheckLevelStatus: () ==> bool
+CheckLevelStatus() == (
+		if order <> nil and recipe <> nil
+		then (	
+					if CM`grinder.EnoughBeans(recipe.coffee) and
+						 CM`cupController.CupAwailable(order.#1)
+					then return true
+					else ( 	IO`print("\n\n*******************Oh no! Sold out!*******************\n\n");
+					soldOut := true;
+					);
+		);
+		return false;
 );
-
-TakeCup: () ==> ()
-TakeCup() == (
-	CM`cupController.TakeCup(order.#1);
-	status := <BoilWater>
-);
-
-Grind: () ==> ()
-Grind() == (
-	CM`grinder.Grind(recipe.coffee);
- 	status := <TakeCup>
-);
-
-Ready: () ==> ()
-Ready() == (
-	IO`print("\n--- Begining new order ---");
-	CheckLevelStatus(); 
-	status := <Grind>
-);
-
-CheckLevelStatus: () ==> ()
-CheckLevelStatus() == 
-		if CM`grinder.EnoughBeans(recipe.coffee) and
-			 CM`cupController.CupAwailable(order.#1)
-		then return
-		else CM`stateController.ErrorOccurred();	
 
 end BrewController

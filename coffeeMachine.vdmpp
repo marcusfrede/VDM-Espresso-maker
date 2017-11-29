@@ -6,7 +6,9 @@ public static brewController  		: BrewController := new BrewController();
 public static cupController  			: CupController := new CupController();
 public static waterTankController : WaterTankController := new WaterTankController();
 public static grinder						  : Grinder := new Grinder();
-public static stateController	    : StateController := new StateController();
+
+public static tempSensor 								: TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>);
+public static levelSensor 								: LevelSensor := new LevelSensor(1, <LEVELSENSOR>);
 
 -- This part can be extended with concurrency
 --private static MotionDetector		  : MotionDetector := new MotionDetector();

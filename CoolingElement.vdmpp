@@ -16,7 +16,7 @@ public GetID: () ==> nat
 
 public Step: () ==> ()
 	Step() == (
-	  let ot = CM`waterTankController.ReadTemp(),
+		let ot = CM`tempSensor.ReadValue(),
 		 		nt = CM`waterTankController.DecTemp()
 		in
 			if World`env.Verbose() then	IO`printf("\nDecremented temperature from %1s to %2s", [ot,nt]);

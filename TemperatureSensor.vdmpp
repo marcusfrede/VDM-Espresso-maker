@@ -1,4 +1,4 @@
-class TemperatureSensor is subclass of Sensor
+class TemperatureSensor is subclass of Sensor, WaterTankController
 
 operations
 
@@ -8,7 +8,7 @@ public TemperatureSensor: nat * sensorType ==> TemperatureSensor
 
 public Step: () ==> ()
 	Step() == ( 
-		Value := CM`waterTankController.ReadTemp();
+		Value := CM`waterTankController.waterTemp;
 );
 
 end TemperatureSensor

@@ -1,14 +1,14 @@
-class Sensor
+class Sensor is subclass of WaterTankController
 
 types
 
-public sensorType 	= <TEMPSENSOR> | <NONE>;
+public sensorType 	= <TEMPSENSOR> | <LEVELSENSOR> | <NONE>;
 
 instance variables
 
 protected ID	: [nat] := nil;
 protected Type : sensorType :=  <NONE>;
-protected Value	: [int] := 0;
+protected Value	: int := 0;
 
 operations
 

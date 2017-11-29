@@ -2,15 +2,14 @@ class WaterTankController is subclass of GLOBAL
 
 instance variables
 
-private waterLevel : nat := 0;
-private waterTemp  : nat := 0;
+protected waterLevel : nat := 0;
+protected waterTemp  : nat := 0;
 
-private tempSensor 				: TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>);
 private heatingElement 		: HeatingElement := new HeatingElement(1);
 private coolingElement 		: CoolingElement := new CoolingElement(1);
 
 inv LevelInv(waterLevel);
-inv TempInv(tempSensor);
+inv TempInv(waterTemp);
 
 functions
 
@@ -34,67 +33,55 @@ measure DecWaterMeasure;
 DecWaterMeasure: nat * nat -> nat
 DecWaterMeasure(c,g) == g + c; 
 
-
 LevelInv: nat -> bool
 LevelInv(lvl) == 
 	lvl >= minWaterTankLevel and lvl <= maxWaterTankLevel;
 
-TempInv: TemperatureSensor -> bool
-TempInv(s) == (
-	s.ReadValue() >= 0 and s.ReadValue() <= 100
-);
+TempInv: nat -> bool
+TempInv(t) == 
+	t >= 0 and t <= 100;
 
 operations
 
-
-public GetWaterLevel: () ==> nat
-GetWaterLevel() ==
-	return waterLevel;
-
-public GetWaterTemp: () ==> nat
-GetWaterTemp() ==
-	return tempSensor.ReadValue();
+public Step: () ==> ()
+Step() ==
+  (  
+    UpdateSensors();
+		FillWaterTank();		    				
+		CorrectWaterTemperature();		
+		
+		if World`env.Verbose() then IO`print("\nTank step\n"); 
+  );
 
 public UpdateSensors: () ==> ()
 UpdateSensors() == (
-	tempSensor.Step();
+	CM`tempSensor.Step();
+	CM`levelSensor.Step();
 );
 
-public CorrectWaterTemperature: () ==> bool
-CorrectWaterTemperature() == ( 			
-	
-	if tempSensor.ReadValue() > maxWaterTankTemp
-	then (coolingElement.Step(); 
-				return false); 
-				 			
-	if tempSensor.ReadValue() < minWaterTankTemp		
-	then (heatingElement.Step();
-			 return false);
-			 
-	return true;
+public CorrectWaterTemperature: () ==> ()
+CorrectWaterTemperature() == ( 				
+	if waterTemp > maxWaterTankTemp
+	then coolingElement.Step(); 
+					 			
+	if waterTemp < minWaterTankTemp		
+	then heatingElement.Step();
 );
 
-public TakeWater: () ==> nat1
-TakeWater() == (
- 	waterLevel := DecreaseWater(waterLevel, waterLevel - 5);
- 	IO`printf("\nDecreased water level to: %1s",[waterLevel]); 
-	return 5;
+public TakeWater: nat1 ==> ()
+TakeWater(n) == (
+ 	waterLevel := DecreaseWater(waterLevel, waterLevel - n);
+ 	if World`env.Verbose() then IO`printf("\nDecreased water level to: %1s",[waterLevel]); 
 );
 	
-public FillWaterTank: () ==> bool
+public FillWaterTank: () ==> ()
 FillWaterTank() == ( 			
 	if waterLevel < maxWaterTankLevel
 	then (
 				waterLevel := IncreaseWater(waterLevel, waterLevel + 5);
-				IO`printf("\nIncreased water level to: %1s",[waterLevel]); 
-				return false
-			 )
-	else return true
+				if World`env.Verbose() then IO`printf("\nIncreased water level to: %1s",[waterLevel]); 
+			 );
 );
-
-pure public ReadTemp: () ==> nat
-ReadTemp() ==
-	return waterTemp;
 
 public IncTemp: () ==> nat
 IncTemp() == (
@@ -107,7 +94,6 @@ DecTemp() == (
 	waterTemp := waterTemp - 1;
 	return waterTemp;
 );
-
 
 ------ Only for testing -------
 

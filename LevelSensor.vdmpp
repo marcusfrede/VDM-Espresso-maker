@@ -1,0 +1,14 @@
+class LevelSensor is subclass of Sensor
+
+operations
+
+public LevelSensor: nat * sensorType ==> LevelSensor
+	LevelSensor (id, type) ==
+		(ID := id; Type := type;);
+
+public Step: () ==> ()
+	Step() == ( 
+		Value := CM`waterTankController.waterLevel;
+);
+
+end LevelSensor

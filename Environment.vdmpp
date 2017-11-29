@@ -18,7 +18,7 @@ operations
 public 
 Environment: seq of char * seq of char ==> Environment
   Environment(fileIn, fileOut) ==
-   (def mk_ (-,mk_(v,t,b,input)) = IO`freadval[bool * nat * nat * seq of Inline](fileIn) 
+   (def mk_ (-,mk_(v,t,c,b,input)) = IO`freadval[bool * nat * nat * nat * seq of Inline](fileIn) 
     in
      (
      	inlines := input;
@@ -27,11 +27,11 @@ Environment: seq of char * seq of char ==> Environment
       outputFile := fileOut;
 				   
       IO`print("\n--- Booting system ---");
-      IO`printf("\nInitial water level: %1s",[CM`waterTankController.GetWaterLevel()]);
-      IO`printf("\nInitial water temperature: %1s",[CM`waterTankController.ReadTemp()]);
-      CM`grinder.FillGrinder();
+      IO`printf("\nInitial water level: %1s",[CM`levelSensor.ReadValue()]);
+      IO`printf("\nInitial water temperature: %1s",[CM`tempSensor.ReadValue()]);
+      CM`grinder.FillGrinder(b);
       IO`printf("\nRemaining bean weight: %1s",[CM`grinder.RemaingBeanWeight()]);
-      CM`cupController.FillCups(20);     
+      CM`cupController.FillCups(c);     
       IO`print("\n--- System booted successfully ---\n");        
      );
   
@@ -41,10 +41,9 @@ public
 Run: () ==> ()
 Run () == (
 	while (isFinished() = false and 
-	CM`stateController.GetState() <> <Error>) do
+	not CM`brewController.SoldOut()) do
  	(
- 		CM`brewController.Step();  			
- 	  CM`waterTankController.UpdateSensors();
+ 		CM`waterTankController.Step();  			
  		CreateSignal();
    	World`timerRef.StepTime();
   );
@@ -59,15 +58,14 @@ CreateSignal() == (
   	dcl curtime : nat := World`timerRef.GetTime();
   	def mk_ (order, time) = hd inlines in
    	(
-   		if time <= curtime
+   		if time <= curtime and CM`levelSensor.ReadValue() > 800
     	then 
     			(
-						CM`brewController.Start(order);
-						if CM`brewController.GetStatus() = <Done> 
-						then (
-			          	handleEvent(order, CM`waterTankController.GetWaterLevel(), curtime);
-			          	inlines := tl inlines; -- take tail and assign to inlines
-          			 );
+						CM`brewController.AddOrder(order);
+						CM`brewController.Step();					
+          	handleEvent(order, CM`levelSensor.ReadValue(), curtime);
+          	if World`env.Verbose() then IO`printf("\nPopped inline: %1s",[hd inlines]);
+          	inlines := tl inlines; -- take tail and assign to inlines
        		);
    		);
   )
@@ -81,8 +79,8 @@ CreateSignal() == (
 ShutDownReport: () ==> ()
 ShutDownReport() == (
 	IO`print("\n\n--- Shutdown report ---");
-	IO`printf("\nRemaining water level: %1s",[CM`waterTankController.GetWaterLevel()]);
-	IO`printf("\nCurrent water temperature: %1s",[CM`waterTankController.ReadTemp()]);
+	IO`printf("\nRemaining water level: %1s",[CM`levelSensor.ReadValue()]);
+	IO`printf("\nCurrent water temperature: %1s",[CM`tempSensor.ReadValue()]);
 	IO`printf("\nRemaining bean weight: %1s",[CM`grinder.RemaingBeanWeight()]);
 	CM`cupController.PrintRemainingCups();
 	IO`print("\n--- System terminated ---\n");

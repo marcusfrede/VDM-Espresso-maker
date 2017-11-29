@@ -43,7 +43,8 @@ FillCupMeas(bag, cs, n) == if cs not in set dom bag then 0 else len bag(cs) + 1;
 
 Exists: CupBag * CupSize -> bool
 Exists(bag, cs) ==
-	cs in set dom bag;
+	let x = cs in set dom bag in
+	x;
 	
 Add : CupBag * CupSize -> CupBag
 Add (bag, cs) ==
@@ -77,23 +78,19 @@ FillCups(no) == (
 public TakeCup: CupSize ==> ()
 TakeCup(cs) == (
 
-	if not CupAwailable(cs) 
-	then 
-			(
-				IO`printf("We are out of %1s cups", [cs]);
-				CM`stateController.ErrorOccurred();
+if CupAwailable(cs) = false 
+	then(
+				IO`print("We are out of cups");
 				return;
-			);
-	
+	 		);
+			
 	cups := 
 			cases cs:
 				<Small>,  <Single> -> Remove(cups,<Small>),
 				<Medium>, <Double> -> Remove(cups,<Medium>),
 				<Large>,  <Triple> -> Remove(cups,<Large>)
 			end;
-	
 		IO`print("\n*** Took cup");
-			
 );
 	
 public PrintRemainingCups: () ==> ()
@@ -104,12 +101,14 @@ PrintRemainingCups() ==
 pure public 
 CupAwailable: CupSize ==> bool
 CupAwailable(cs) == 
-	return
+	let x =
 		cases cs:
 			<Small>,  <Single> -> Exists(cups,<Small>)  and len cups(<Small>) > 0,
 			<Medium>, <Double> -> Exists(cups,<Medium>) and len cups(<Medium>) > 0,
 			<Large>,  <Triple> -> Exists(cups,<Large>)  and len cups(<Large>) > 0
-		end;
+		end in
+		
+		return x;
 		
 private FillCupStacks: nat ==> ()
 FillCupStacks(s) == (

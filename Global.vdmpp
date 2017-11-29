@@ -34,8 +34,8 @@ RecipeLookup(order) ==
 	if order in set dom recipes 
 	then return recipes(order)
 	else ( /* TODO Dette passer fint på kravet om at ordre ikke må være ugyldige kombinationer */
-		IO`printf("\n\n*** The order %1s %2s is invalid ***", [order.#1, order.#2]);
-		IO`print("\n*** The order is cancelled ***\n");
+		IO`printf("\n\n*** The order %1s %2s is invalid", [order.#1, order.#2]);
+		IO`print("\n*** The order is cancelled\n");
 		return nil;
 	);	
 	
