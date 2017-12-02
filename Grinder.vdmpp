@@ -26,7 +26,7 @@ Select(bag,weight) ==
   else let b in set dom bag be st weight = b or forall b1 in set dom bag & b >= b1
        in 
          Select(Remove(bag,b), (weight - b) mod weight)        
-pre weight >= 0
+pre weight >= 0 and CalculateWeight(bag) >= weight 
 measure mselect;
 
 
