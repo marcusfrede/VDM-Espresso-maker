@@ -1,0 +1,66 @@
+class CupControllerTest is subclass of TestCase, CupController, GLOBAL
+
+instance variables
+
+cups : CupBag := {<Small>|->[mk_Cup(<Small>)]};
+operations
+
+protected runTest : () ==> () 
+runTest() == (
+	Test1();
+--	Test2();
+);
+
+
+protected Test1 : () ==> () 
+Test1() == (
+dcl cupController : CupController := new CupController();
+dcl sm : CupSize := <Small>;
+--dcl md : CupSize := <Medium>;
+dcl lg : CupSize := <Large>;
+dcl count : nat := 10; 
+ 
+let bag = cupController.FillCupStack({|->}, sm, count) in
+assertTrue(len bag(sm) = count);
+
+
+let bag = cupController.Remove({<Small>|->[mk_Cup(<Small>)]}, sm) in
+assertTrue(dom bag = {});
+
+
+
+
+
+
+
+--Exists(bag, cs)
+
+/*
+Add (bag, cs)
+
+Append (bag, cs)
+
+Remove (bag, cs)
+
+
+TakeCup(cs)
+
+PrintRemainingCups() 
+
+CupAwailable(cs)
+		
+*/
+
+
+);
+
+
+
+
+/*
+protected Test2 : () ==> () 
+Test2() == (
+
+);
+*/
+end CupControllerTest

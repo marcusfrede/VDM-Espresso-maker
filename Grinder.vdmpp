@@ -2,7 +2,7 @@ class Grinder
 
 types
 
-Bag = map nat1 to nat1; -- 1 er de 3 vægte(1,2,3). 2 svarer til mængden af bønner svarende til den vægt.
+Bag = map nat1 to nat1;
 							 							
 instance variables
 
@@ -16,16 +16,19 @@ Remove (b, e) ==
   then if b(e) = 1
        then  {e} <-: b
        else  b ++ {e |-> b(e) - 1}
-  else b;
+  else b
+pre e in set dom b;
 
 Select: Bag * nat -> Bag
-Select(bag,weigth) ==
-  if weigth = 0
+Select(bag,weight) ==
+  if weight = 0
   then bag
-  else let b in set dom bag be st weigth = b or forall b1 in set dom bag & b >= b1
+  else let b in set dom bag be st weight = b or forall b1 in set dom bag & b >= b1
        in 
-         Select(Remove(bag,b), (weigth - b) mod weigth)        
+         Select(Remove(bag,b), (weight - b) mod weight)        
+pre weight >= 0
 measure mselect;
+
 
 mselect: Bag * nat -> nat
 mselect(b, weight) == CalculateWeight(b) + weight;
@@ -50,9 +53,9 @@ FillGrinder(n) == (
 	beans := {x|-> MATH`rand(n) mod n + (n-10) | x in set{1,...,3}};
 	
 	IO`printf("\nGrinder filled with beans %1s %2s %3s", [beans(1), beans(2), beans(3)]);
-);
---pre upper <= 500
---post card beans <= 500;
+)
+pre n > 0 and n <= 50
+post CalculateWeight(beans) <= 5150;
 
 
 public Grind: nat1 ==> ()
@@ -70,5 +73,51 @@ EnoughBeans(w) ==
 pure public RemaingBeanWeight: () ==> nat
 RemaingBeanWeight() == 
 	return CalculateWeight(beans);
+
+traces
+
+T1:
+		let x in set {0,...,4}
+		in
+			Select({1 |-> 2}, x);
+
+T2:
+		let bag = {2 |-> 3, 3 |-> 2}
+		in
+			let x in set {0,...,10}
+		in
+			Select(bag, x);
+
+T3:
+		let o in set {1,...,3} in
+		let x in set {1,...,3} in
+		let y in set {1,...,3} in
+		let z in set {1,...,3}
+		in
+			let bag = {1|->x, 2|->x, 3|->x}
+		in
+			Remove(bag, o);
+
+T4:
+		let x in set {0,...,3}
+		in
+			let bag = {x|->x}
+		in
+			Remove(bag, x);
+
+T5:
+		let x in set {1}
+		in
+			let bag = {2|->1}
+		in
+			Select(bag, x);
+		
+		
+/*
+T2:
+	let x in set {0,1,2}	
+	in
+		op1(x);
+*/
 
 end Grinder

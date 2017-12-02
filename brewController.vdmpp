@@ -1,12 +1,23 @@
 class BrewController is subclass of GLOBAL
 
+types
+
+Recipe :: water : nat1
+				 coffee : nat;  
+
+Recipes = map Order to Recipe;			
+
 instance variables 
 
-order : [Order] := nil;
+order  : [Order] := nil;
 recipe : [Recipe] := nil; 		
 soldOut : bool := false;
 heatedWater : nat := 0;
-	 
+	
+recipes : Recipes := {mk_ (<Single>, <Espresso>) |-> mk_Recipe(15 , 7),	mk_ (<Double>, <Espresso>)  |-> mk_Recipe(30, 14), 	mk_ (<Triple>, <Espresso>) |-> mk_Recipe(60, 21),
+											mk_ (<Small>, <Americano>) |-> mk_Recipe(150, 7), mk_ (<Medium>, <Americano>) |-> mk_Recipe(300, 14), mk_ (<Large>, <Americano>) |-> mk_Recipe(600, 21),
+											mk_ (<Small>, <HotWater>)  |-> mk_Recipe(150, 0), mk_ (<Medium>, <HotWater>)  |-> mk_Recipe(300, 0),  mk_ (<Large>, <HotWater>)  |-> mk_Recipe(600, 0)};
+
 operations
 
 public SoldOut: () ==> bool
@@ -59,5 +70,15 @@ CheckLevelStatus() == (
 		);
 		return false;
 );
-
+	
+RecipeLookup: Order ==> [Recipe]
+RecipeLookup(o) == 
+	if order in set dom recipes 
+	then return recipes(order)
+	else ( /* TODO Dette passer fint på kravet om at ordre ikke må være ugyldige kombinationer */
+		IO`printf("\n\n*** The order %1s %2s is invalid", [o.#1, o.#2]);
+		IO`print("\n*** The order is cancelled\n");
+		return nil;
+	);		
+											 
 end BrewController

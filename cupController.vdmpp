@@ -43,8 +43,7 @@ FillCupMeas(bag, cs, n) == if cs not in set dom bag then 0 else len bag(cs) + 1;
 
 Exists: CupBag * CupSize -> bool
 Exists(bag, cs) ==
-	let x = cs in set dom bag in
-	x;
+	cs in set dom bag;
 	
 Add : CupBag * CupSize -> CupBag
 Add (bag, cs) ==
@@ -58,6 +57,7 @@ Append (bag, cs) ==
   then bag ++ {cs |-> bag(cs)}
   else bag;
 
+protected
 Remove : CupBag * CupSize -> CupBag
 Remove (bag, cs) ==
   if cs in set dom bag
@@ -65,6 +65,7 @@ Remove (bag, cs) ==
        then {cs} <-: bag
        else bag ++ {cs |-> tl bag(cs)}
   else bag;
+
 
 operations
 
@@ -103,9 +104,9 @@ CupAwailable: CupSize ==> bool
 CupAwailable(cs) == 
 	let x =
 		cases cs:
-			<Small>,  <Single> -> Exists(cups,<Small>)  and len cups(<Small>) > 0,
-			<Medium>, <Double> -> Exists(cups,<Medium>) and len cups(<Medium>) > 0,
-			<Large>,  <Triple> -> Exists(cups,<Large>)  and len cups(<Large>) > 0
+			<Small>,  <Single> -> Exists(cups,<Small>),
+			<Medium>, <Double> -> Exists(cups,<Medium>),
+			<Large>,  <Triple> -> Exists(cups,<Large>)
 		end in
 		
 		return x;
@@ -116,5 +117,19 @@ FillCupStacks(s) == (
 	cups := Append(FillCupStack(cups ,<Medium>,s),<Medium>);
 	cups := Append(FillCupStack(cups ,<Large>,s),<Large>);
 );
-			
+
+/*
+traces
+
+T1:
+		let bag = {<Small>|->[mk_Cup(<Small>)], <Large>|->[mk_Cup(<Large>)]}
+		in
+			Exists(bag, <Medium>);
+
+T2:
+		let bag = {<Small>|->[mk_Cup(<Small>)], <Large>|->[mk_Cup(<Large>)]}
+		in
+			Exists(bag, <Small>);
+
+*/			
 end CupController
