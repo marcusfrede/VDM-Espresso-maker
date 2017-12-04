@@ -1,14 +1,13 @@
-class TemperatureSensor is subclass of Sensor, WaterTankController
+class TemperatureSensor is subclass of Sensor, WaterTank
 
 operations
 
 public TemperatureSensor: nat * sensorType ==> TemperatureSensor
-	TemperatureSensor (id, type) ==
-		(ID := id; Type := type;);
+TemperatureSensor (id, type) ==
+	(ID := id; Type := type;);
 
 public Step: () ==> ()
-	Step() == ( 
-		Value := CM`waterTankController.waterTemp;
-);
+Step() ==
+	Value := CM`waterTank.waterTemp;
 
 end TemperatureSensor

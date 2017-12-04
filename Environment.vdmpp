@@ -18,15 +18,17 @@ operations
 public 
 Environment: seq of char * seq of char ==> Environment
   Environment(fileIn, fileOut) ==
-   (def mk_ (-,mk_(v,t,c,b,input)) = IO`freadval[bool * nat * nat * nat * seq of Inline](fileIn) 
+   (def mk_ (-,mk_(v,t,l,c,b,input)) = IO`freadval[bool * nat * nat * nat * nat * seq of Inline](fileIn) 
     in
      (
      	inlines := input;
 			verbose := v;
-			CM`waterTankController.SetTemp(t);
+			CM`waterTank.SetTempENV(t);
+			CM`waterTank.SetWaterLevelENV(l);
       outputFile := fileOut;
 				   
       IO`print("\n--- Booting system ---");
+      CM`waterTankController.UpdateSensors();
       IO`printf("\nInitial water level: %1s",[CM`levelSensor.ReadValue()]);
       IO`printf("\nInitial water temperature: %1s",[CM`tempSensor.ReadValue()]);
       CM`grinder.FillGrinder(b);
@@ -41,7 +43,7 @@ public
 Run: () ==> ()
 Run () == (
 	while (isFinished() = false and 
-	not CM`brewController.SoldOut()) do
+	not CM`brewController.isFinished()) do
  	(
  		CM`waterTankController.Step();  			
  		CreateSignal();

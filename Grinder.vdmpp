@@ -7,8 +7,13 @@ Bag = map nat1 to nat1;
 instance variables
 
 beans : Bag := {|->};
+inv beansDomInv(beans);
 
 functions
+
+beansDomInv: (Bag) -> bool
+beansDomInv(b) ==
+	dom b \ {1,2,3} = {};  
 
 Remove : Bag * nat -> Bag
 Remove (b, e) ==
@@ -45,28 +50,23 @@ CalculateWeight(b) ==
 
 operations
 
-
 public FillGrinder: nat ==> ()
 FillGrinder(n) == (
 	IO`print("\nFilling Grinder with beans");
-	
 	beans := {x|-> MATH`rand(n) mod n + (n-10) | x in set{1,...,3}};
-	
 	IO`printf("\nGrinder filled with beans %1s %2s %3s", [beans(1), beans(2), beans(3)]);
 )
 pre n > 0 and n <= 50
-post CalculateWeight(beans) <= 5150;
+post CalculateWeight(beans) <= 534;
 
-
-public Grind: nat1 ==> ()
+public Grind: nat ==> ()
 Grind(weight) == (
 	beans := Select(beans, weight);
 	IO`print("\n*** Grinding");
 )
-pre EnoughBeans(weight); -- what if out off beans? error message!!!
+pre EnoughBeans(weight);
 
-
-pure public EnoughBeans: nat1 ==> bool
+pure public EnoughBeans: nat ==> bool
 EnoughBeans(w) == 
 	return w <= CalculateWeight(beans);
 
@@ -111,13 +111,6 @@ T5:
 			let bag = {2|->1}
 		in
 			Select(bag, x);
-		
-		
-/*
-T2:
-	let x in set {0,1,2}	
-	in
-		op1(x);
-*/
+
 
 end Grinder

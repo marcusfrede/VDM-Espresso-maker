@@ -1,7 +1,7 @@
 class CupController is subclass of GLOBAL
 
 types
-public Cup :: volume : CupSize;
+public Cup :: size : CupSize;
 public CupBag = map CupSize to seq of Cup;				
 												
 instance variables
@@ -15,8 +15,13 @@ maxCups  : nat := 0;
 
 --inv WrongCupInv(cups);
 --inv CupSizeInv(cups, maxCups);
+inv cupsDomInv(cups);
 
 functions
+
+cupsDomInv: (CupBag) -> bool
+cupsDomInv(b) ==
+	dom b \ {<Small>, <Medium>, <Large>} = {};  
 
 WrongCupInv: CupBag -> bool
 WrongCupInv(cups) ==
@@ -39,7 +44,7 @@ FillCupStack(bag, cs, no) ==
 --measure FillCupMeas;		
 
 FillCupMeas: CupBag * CupSize * nat1 -> nat
-FillCupMeas(bag, cs, n) == if cs not in set dom bag then 0 else len bag(cs) + 1;
+FillCupMeas(bag, cs, n) == if cs in set dom bag then len bag(cs) else 0;
 
 Exists: CupBag * CupSize -> bool
 Exists(bag, cs) ==
@@ -117,6 +122,11 @@ FillCupStacks(s) == (
 	cups := Append(FillCupStack(cups ,<Medium>,s),<Medium>);
 	cups := Append(FillCupStack(cups ,<Large>,s),<Large>);
 );
+
+public 
+isFinished: () ==> bool
+isFinished() == return true;
+
 
 /*
 traces

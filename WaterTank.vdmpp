@@ -1,0 +1,54 @@
+class WaterTank is subclass of GLOBAL
+
+instance variables
+
+protected waterLevel : nat := 0;
+protected waterTemp  : nat := 0;
+
+inv LevelInv(waterLevel);
+inv TempInv(waterTemp);
+
+functions
+
+LevelInv: nat -> bool
+LevelInv(lvl) == 
+	lvl >= minWaterTankLevel and lvl <= maxWaterTankLevel;
+
+TempInv: nat -> bool
+TempInv(t) == 
+	t >= 0 and t <= 100;
+
+operations
+
+protected IncTemp: () ==> nat
+IncTemp() == (
+	waterTemp := waterTemp + 1;
+	return waterTemp
+);
+
+protected DecTemp: () ==> nat
+DecTemp() == (
+	waterTemp := waterTemp - 1;
+	return waterTemp;
+);
+
+protected SetWaterLevel: nat ==> ()
+SetWaterLevel(l) == 
+	waterLevel := l;
+
+protected SetTemp: nat ==> ()
+SetTemp(t) == 
+	waterTemp := t;
+	
+
+------ Only for testing -------
+
+public SetTempENV: nat ==> ()
+SetTempENV(t) == 
+	waterTemp := t;
+
+public SetWaterLevelENV: nat ==> ()
+SetWaterLevelENV(l) == 
+	waterLevel := l;
+	
+end WaterTank

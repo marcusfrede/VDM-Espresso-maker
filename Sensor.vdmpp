@@ -1,4 +1,4 @@
-class Sensor is subclass of WaterTankController
+class Sensor is subclass of WaterTank
 
 types
 

@@ -20,8 +20,8 @@ recipes : Recipes := {mk_ (<Single>, <Espresso>) |-> mk_Recipe(15 , 7),	mk_ (<Do
 
 operations
 
-public SoldOut: () ==> bool
-SoldOut() == return soldOut;
+public isFinished: () ==> bool
+isFinished() == return soldOut;
 
 public AddOrder: Order ==> ()
 AddOrder(o) == (

@@ -1,4 +1,4 @@
-class HeatingElement
+class HeatingElement is subclass of WaterTank
 
 instance variables
 
@@ -17,10 +17,9 @@ public GetID: () ==> nat
 public Step: () ==> ()
 	Step() == (
 		let ot = CM`tempSensor.ReadValue(),
-		    nt = CM`waterTankController.IncTemp()
+		    nt = CM`waterTank.IncTemp()
 		in    	
 		if World`env.Verbose() then	IO`printf("\nIncremented temperature from %1s to %2s", [ot,nt]);		
 )
---post World`env.ReadTemp() = World`env.ReadTemp() + 1
 
 end HeatingElement
